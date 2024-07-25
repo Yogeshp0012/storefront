@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import Medusa, { Config } from "@medusajs/medusa-js"
+import Medusa, { Config } from "@medusajs/medusa-js";
+import { environment } from '../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -7,7 +8,7 @@ import Medusa, { Config } from "@medusajs/medusa-js"
 export class MedusaClientService {
     medusa: any;
     constructor() {
-        let config: Config = { baseUrl: "http://localhost:9000", maxRetries: 3 };
+        let config: Config = { baseUrl: environment.BACKEND_URL, maxRetries: 3 };
         this.medusa = new Medusa(config)
     }
 
