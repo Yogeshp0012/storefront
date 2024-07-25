@@ -11,6 +11,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 export class NavigationBarComponent implements OnInit {
     isScrolled = false;
     mounted = false;
+    mobileMenu: boolean = false;
 
     @HostListener('window:scroll', [])
     onWindowScroll() {
@@ -19,5 +20,13 @@ export class NavigationBarComponent implements OnInit {
 
     ngOnInit() {
         this.mounted = true;
+    }
+
+    openMobileMenu() {
+        this.mobileMenu = true;
+    }
+
+    closeMobileMenu() {
+        this.mobileMenu = false;
     }
 }
