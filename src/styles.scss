@@ -1,3 +1,22 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+
+html {
+    font-family: 'Jost', sans-serif;
+}
+
+.image-container {
+    transition: transform 0.3s ease-in-out;
+}
+
+.image-container:hover {
+    transform: scale(1.02);
+}
+
+.content-container {
+    width: full;
+    margin-top: 85px;
+    padding: 0px 12px;
+}

@@ -20,4 +20,8 @@ export class MedusaClientService {
         console.log(collectionId);
         return this.medusa.products.list({ collection_id: [collectionId] })
     }
+
+    getAllProducts(){
+        return this.medusa.products.list()
+    }
 }
