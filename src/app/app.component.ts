@@ -1,19 +1,29 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { MedusaClientService } from './medusa-client.service';
+import { Component, inject, OnInit, Renderer2 } from '@angular/core';
+import { NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
 import { FooterComponent } from './footer/footer.component';
 import { injectSpeedInsights } from '@vercel/speed-insights';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, NavigationBarComponent, FooterComponent],
+    imports: [RouterOutlet, NavigationBarComponent, FooterComponent, RouterModule],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+    private readonly document = inject(DOCUMENT);
+    private readonly renderer = inject(Renderer2);
+    private readonly router: Router = inject(Router);
+
     ngOnInit(): void {
         injectSpeedInsights();
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationEnd) {
+                this.renderer.setProperty(this.document.documentElement, 'scrollTop', 0);
+                this.renderer.setProperty(this.document.body, 'scrollTop', 0);
+            }
+        });
     }
 }

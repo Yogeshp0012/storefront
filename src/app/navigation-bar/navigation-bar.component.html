@@ -11,9 +11,9 @@
             </div>
             <div class="flex px-2 lg:px-0 space-x-4">
                 <div class="hidden lg:ml-6 lg:flex lg:space-x-8">
-                    <a class="inline-flex items-center border-none px-1 pt-1 text-md font-normal" href="/store">
+                    <div class="hover:text-green-800 inline-flex items-center border-none px-1 pt-1 text-md font-normal cursor-pointer" routerLinkActive="/store/women" routerLink="/store/women">
                         Women
-                    </a>
+                    </div>
                     <a class="inline-flex items-center border-none px-1 pt-1 text-md font-normal" href="/store">
                         Men
                         <span
@@ -23,9 +23,9 @@
                     <a class="inline-flex items-center border-none px-1 pt-1 text-md font-normal" href="/store">
                         FAQ
                     </a>
-                    <a class="inline-flex items-center border-none px-1 pt-1 text-md font-normal" href="/store">
+                    <div routerLink="about" routerLinkActive="font-semibold text-green-800" class="hover:text-green-800 cursor-pointer inline-flex items-center border-none px-1 pt-1 text-md font-normal">
                         About
-                    </a>
+                    </div>
                 </div>
             </div>
             <div class="hidden lg:flex items-center space-x-4">
@@ -144,10 +144,10 @@
                             </button>
                         </div>
                         <div class="mt-6 space-y-1">
-                            <a href="/store"
-                                class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-green-800 bg-green-800 text-white">
+                            <div routerLink="/store/women"
+                                class="hover:text-green-800 block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-green-800 bg-green-800 text-white">
                                 Women
-                            </a>
+                        </div>
                             <span class="block border-transparent border-l-4 py-2 pl-3 pr-4 text-gray-600 font-medium">
                                 Men
                                 <span
