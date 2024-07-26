@@ -13,6 +13,7 @@ export class NavigationBarComponent implements OnInit {
     isScrolled = false;
     mounted = false;
     mobileMenu: boolean = false;
+    isMenuOpen: boolean = false;
 
     @HostListener('window:scroll', [])
     onWindowScroll() {
@@ -25,6 +26,7 @@ export class NavigationBarComponent implements OnInit {
 
     openMobileMenu() {
         this.mobileMenu = true;
+        this.isMenuOpen = true;
     }
 
     closeMobileMenu() {

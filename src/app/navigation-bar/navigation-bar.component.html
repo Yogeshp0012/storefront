@@ -11,7 +11,8 @@
             </div>
             <div class="flex px-2 lg:px-0 space-x-4">
                 <div class="hidden lg:ml-6 lg:flex lg:space-x-8">
-                    <div class="hover:text-green-800 inline-flex items-center border-none px-1 pt-1 text-md font-normal cursor-pointer" routerLinkActive="/store/women" routerLink="/store/women">
+                    <div class="hover:text-green-800 inline-flex items-center border-none px-1 pt-1 text-md font-normal cursor-pointer"
+                        routerLinkActive="/store/women" routerLink="/store/women">
                         Women
                     </div>
                     <a class="inline-flex items-center border-none px-1 pt-1 text-md font-normal" href="/store">
@@ -20,10 +21,11 @@
                             class="ml-2 inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-800 z-100 text-white ">Coming
                             Soon</span>
                     </a>
-                    <a class="inline-flex items-center border-none px-1 pt-1 text-md font-normal" href="/store">
+                    <div routerLink="faq" routerLinkActive="font-semibold text-green-800" class="hover:text-green-800 cursor-pointer inline-flex items-center border-none px-1 pt-1 text-md font-normal" href="/store">
                         FAQ
-                    </a>
-                    <div routerLink="about" routerLinkActive="font-semibold text-green-800" class="hover:text-green-800 cursor-pointer inline-flex items-center border-none px-1 pt-1 text-md font-normal">
+                    </div>
+                    <div routerLink="about" routerLinkActive="font-semibold text-green-800"
+                        class="hover:text-green-800 cursor-pointer inline-flex items-center border-none px-1 pt-1 text-md font-normal">
                         About
                     </div>
                 </div>
@@ -76,15 +78,15 @@
                     </svg>
                     <span class="bg-green-800  px-2 rounded-xl text-xs py-1 mb-4 font-medium text-white">1</span>
                 </a>
-                <div
-                class="small:block absolute top-[calc(100%)] right-0 bg-white border-x border-b border-gray-200 w-[420px] text-ui-fg-base">
-                <div class="p-4 flex items-center justify-center">
-                    <h3 class="text-lg font-semibold">Cart</h3>
-                </div>
-                <div class="overflow-y-scroll max-h-[402px] px-4 grid grid-cols-1 gap-y-8 no-scrollbar p-px">
-                    test
-                </div>
-            </div>
+                <!-- <div
+                    class="small:block absolute top-[calc(100%)] right-0 bg-white border-x border-b border-gray-200 w-[420px] text-ui-fg-base">
+                    <div class="p-4 flex items-center justify-center">
+                        <h3 class="text-lg font-semibold">Cart</h3>
+                    </div>
+                    <div class="overflow-y-scroll max-h-[402px] px-4 grid grid-cols-1 gap-y-8 no-scrollbar p-px">
+                        test
+                    </div>
+                </div> -->
             </div>
             <div class="flex items-center lg:hidden">
                 <a class="text-gray-400 hover:text-green-800" href="/search" data-testid="nav-search-link">
@@ -123,6 +125,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
+                @if(isMenuOpen){
                 <div id="mobile-menu" [ngClass]="{
                 'animate__animated fixed inset-0 z-50 flex flex-col bg-white lg:hidden': true,
                 'animate__fadeInDown': mobileMenu,
@@ -147,7 +150,7 @@
                             <div routerLink="/store/women"
                                 class="hover:text-green-800 block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-green-800 bg-green-800 text-white">
                                 Women
-                        </div>
+                            </div>
                             <span class="block border-transparent border-l-4 py-2 pl-3 pr-4 text-gray-600 font-medium">
                                 Men
                                 <span
@@ -169,6 +172,7 @@
                         </div>
                     </div>
                 </div>
+                }
             </div>
         </div>
     </div>
