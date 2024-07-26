@@ -1,10 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MedusaClientService } from '../medusa-client.service';
+import { NgOptimizedImage } from '@angular/common'
 
 @Component({
     selector: 'app-home',
     standalone: true,
-    imports: [],
+    imports: [NgOptimizedImage],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
 })

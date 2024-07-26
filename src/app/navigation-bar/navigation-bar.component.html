@@ -3,9 +3,9 @@
         <div class="flex h-[84px] justify-between items-center">
             <div class="flex px-2 lg:px-0">
                 <div class="flex flex-shrink-0 items-center">
-                    <img class="block h-12 w-auto lg:hidden" src="/assets/images/vastragrah-logo.webp"
+                    <img class="block h-12 w-auto lg:hidden" priority ngSrc="/assets/images/vastragrah-logo.webp"
                         alt="Vastragrah" />
-                    <img class="hidden h-10 w-auto lg:block" src="/assets/images/vastragrah-logo.webp"
+                    <img class="hidden h-10 w-auto lg:block" priority ngSrc="/assets/images/vastragrah-logo.webp"
                         alt="Vastragrah" />
                 </div>
             </div>
@@ -76,6 +76,15 @@
                     </svg>
                     <span class="bg-green-800  px-2 rounded-xl text-xs py-1 mb-4 font-medium text-white">1</span>
                 </a>
+                <div
+                class="small:block absolute top-[calc(100%)] right-0 bg-white border-x border-b border-gray-200 w-[420px] text-ui-fg-base">
+                <div class="p-4 flex items-center justify-center">
+                    <h3 class="text-lg font-semibold">Cart</h3>
+                </div>
+                <div class="overflow-y-scroll max-h-[402px] px-4 grid grid-cols-1 gap-y-8 no-scrollbar p-px">
+                    test
+                </div>
+            </div>
             </div>
             <div class="flex items-center lg:hidden">
                 <a class="text-gray-400 hover:text-green-800" href="/search" data-testid="nav-search-link">
@@ -121,9 +130,9 @@
               }">
                     <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                         <div class="flex items-center justify-between">
-                            <img class="block h-12 w-auto lg:hidden"
-                                src="/assets/images/vastragrah-logo.webp" alt="Vastragrah" />
+                            <img class="block h-12 w-auto lg:hidden" priority ngSrc="/assets/images/vastragrah-logo.webp"
                                 alt="Vastragrah" />
+                            alt="Vastragrah" />
                             <button (click)="closeMobileMenu()" type="button"
                                 class="text-gray-400 hover:text-gray-500 focus:outline-none">
                                 <span class="sr-only">Close menu</span>
