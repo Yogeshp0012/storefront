@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MedusaClientService } from '../medusa-client.service';
+import { TitleService } from '../title.service';
 
 @Component({
     selector: 'app-home',
@@ -10,11 +11,14 @@ import { MedusaClientService } from '../medusa-client.service';
 })
 export class HomeComponent implements OnInit {
     private readonly medusa: MedusaClientService = inject(MedusaClientService);
+    private readonly title: TitleService = inject(TitleService);
+
     collections: any[] = [];
     productsByCollection: { [key: string]: any[] } = {};
     newArrivals:any[] = [];
 
     ngOnInit(): void {
+        this.title.setTitle("Vastragrah - Home");
         this.medusa.getCollections().then(({ collections, limit, offset, count }: { collections: any, limit: any, offset: any, count: any }) => {
             this.collections = collections;
             collections.forEach((collection: any) => {

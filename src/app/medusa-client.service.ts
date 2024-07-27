@@ -16,12 +16,32 @@ export class MedusaClientService {
         return this.medusa.collections.list()
     }
 
-    getProducts(collectionId: string){
-        console.log(collectionId);
-        return this.medusa.products.list({ collection_id: [collectionId] })
+    getProducts(collectionId: string, limit: number = 4){
+        return this.medusa.products.list({ collection_id: [collectionId], limit })
     }
 
-    getAllProducts(){
-        return this.medusa.products.list()
+    getAllProducts(limit: number = 4){
+        return this.medusa.products.list({limit})
+    }
+
+    //Authentication
+    login(email: string, password: string){
+        return this.medusa.auth.authenticate({ email, password })
+    }
+
+    emailExists(email: string){
+        return this.medusa.auth.exists(email);
+    }
+
+    createUser(first_name: string, last_name: string, email: string, password: string){
+        return this.medusa.customers.create({ first_name, last_name, email, password })
+    }
+
+    checkUserLoggedIn(){
+        return this.medusa.auth.getSession()
+    }
+
+    logout(){
+        return this.medusa.auth.deleteSession();
     }
 }

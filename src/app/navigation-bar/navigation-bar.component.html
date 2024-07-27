@@ -3,10 +3,12 @@
         <div class="flex h-[84px] justify-between items-center">
             <div class="flex px-2 lg:px-0">
                 <div class="flex flex-shrink-0 items-center">
-                    <img class="block h-12 w-auto lg:hidden" src="/assets/images/vastragrah-logo.webp"
-                        alt="Vastragrah" />
-                    <img class="hidden h-10 w-auto lg:block" src="/assets/images/vastragrah-logo.webp"
-                        alt="Vastragrah" />
+                    <div routerLink="/" class="cursor-pointer">
+                        <img class="block h-12 w-auto lg:hidden" src="/assets/images/vastragrah-logo.webp"
+                            alt="Vastragrah" />
+                        <img class="hidden h-10 w-auto lg:block" src="/assets/images/vastragrah-logo.webp"
+                            alt="Vastragrah" />
+                    </div>
                 </div>
             </div>
             <div class="flex px-2 lg:px-0 space-x-4">
@@ -21,7 +23,9 @@
                             class="ml-2 inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-800 z-100 text-white ">Coming
                             Soon</span>
                     </a>
-                    <div routerLink="faq" routerLinkActive="font-semibold text-green-800" class="hover:text-green-800 cursor-pointer inline-flex items-center border-none px-1 pt-1 text-md font-normal" href="/store">
+                    <div routerLink="faq" routerLinkActive="font-semibold text-green-800"
+                        class="hover:text-green-800 cursor-pointer inline-flex items-center border-none px-1 pt-1 text-md font-normal"
+                        href="/store">
                         FAQ
                     </div>
                     <div routerLink="about" routerLinkActive="font-semibold text-green-800"
@@ -48,7 +52,7 @@
                 </a>
                 <div class="relative flex-shrink-0">
                     <div>
-                        <a class="hover:text-ui-fg-base" href="/account" data-testid="nav-account-link">
+                        <span class="cursor-pointer hover:text-ui-fg-base" (click)="checkUser()">
                             <svg class="d-inline-flex align-items-center justify-content-center" width="28" height="28"
                                 viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
                                 <g clip-path="url(#clip0_116_451)">
@@ -61,7 +65,7 @@
                                     </clipPath>
                                 </defs>
                             </svg>
-                        </a>
+                        </span>
                     </div>
                 </div>
                 <a class="group ml-2 flex items-center" href="/cart" data-testid="nav-cart-link">
@@ -78,6 +82,12 @@
                     </svg>
                     <span class="bg-green-800  px-2 rounded-xl text-xs py-1 mb-4 font-medium text-white">1</span>
                 </a>
+                @if(user){
+                <button (click)="logout()" type="button"
+                    class="px-2 cursor-pointer w-full h-10 bg-green-800 hover:bg-green-900 border-none text-white outline-none border-0 rounded-md text-md">
+                    Logout
+                </button>
+                }
                 <!-- <div
                     class="small:block absolute top-[calc(100%)] right-0 bg-white border-x border-b border-gray-200 w-[420px] text-ui-fg-base">
                     <div class="p-4 flex items-center justify-center">
