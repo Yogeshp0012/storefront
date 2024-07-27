@@ -1,9 +1,9 @@
+import { DOCUMENT } from '@angular/common';
 import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 import { NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/router';
-import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
-import { FooterComponent } from './footer/footer.component';
 import { injectSpeedInsights } from '@vercel/speed-insights';
-import { DOCUMENT } from '@angular/common';
+import { FooterComponent } from './footer/footer.component';
+import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
 
 @Component({
     selector: 'app-root',

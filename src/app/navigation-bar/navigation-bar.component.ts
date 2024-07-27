@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, inject, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MedusaClientService } from '../medusa-client.service';
 
 @Component({

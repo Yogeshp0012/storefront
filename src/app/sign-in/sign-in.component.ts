@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TitleService } from '../title.service';
+import { Router, RouterModule } from '@angular/router';
 import { MedusaClientService } from '../medusa-client.service';
-import { Router, RouterLink, RouterModule } from '@angular/router';
+import { TitleService } from '../title.service';
 
 @Component({
   selector: 'app-sign-in',
