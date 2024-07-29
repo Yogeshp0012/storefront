@@ -14,7 +14,7 @@
             <div class="flex px-2 lg:px-0 space-x-4">
                 <div class="hidden lg:ml-6 lg:flex lg:space-x-8">
                     <div class="hover:text-green-800 inline-flex items-center border-none px-1 pt-1 text-md font-normal cursor-pointer"
-                        routerLinkActive="/store/women" routerLink="/store/women">
+                        routerLinkActive="font-semibold text-green-800" routerLink="/store">
                         Women
                     </div>
                     <a class="inline-flex items-center border-none px-1 pt-1 text-md font-normal" href="/store">
@@ -143,9 +143,8 @@
               }">
                     <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                         <div class="flex items-center justify-between">
-                            <img class="block h-12 w-auto lg:hidden" src="/assets/images/vastragrah-logo.webp"
-                                alt="Vastragrah" />
-                            alt="Vastragrah" />
+                            <img (click)="closeMobileMenu()" routerLink="/" class="block h-12 w-auto lg:hidden"
+                                src="/assets/images/vastragrah-logo.webp" alt="Vastragrah" />
                             <button (click)="closeMobileMenu()" type="button"
                                 class="text-gray-400 hover:text-gray-500 focus:outline-none">
                                 <span class="sr-only">Close menu</span>
@@ -157,28 +156,40 @@
                             </button>
                         </div>
                         <div class="mt-6 space-y-1">
-                            <div routerLink="/store/women"
-                                class="hover:text-green-800 block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-green-800 bg-green-800 text-white">
+                            <div routerLink="/store" (click)="closeMobileMenu()"
+                                routerLinkActive="bg-green-800 text-white border-green-800"
+                                class="block border-transparent border-l-4 py-2 pl-3 pr-4 text-gray-600 font-medium">
                                 Women
                             </div>
-                            <span class="block border-transparent border-l-4 py-2 pl-3 pr-4 text-gray-600 font-medium">
+                            <span (click)="closeMobileMenu()"
+                                routerLinkActive="bg-green-800 text-white border-green-800"
+                                class="block border-transparent border-l-4 py-2 pl-3 pr-4 text-gray-600 font-medium">
                                 Men
                                 <span
                                     class="ml-2 inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-800 text-white">Coming
                                     Soon</span>
                             </span>
-                            <a href="/faq"
+                            <span routerLink="/faq" (click)="closeMobileMenu()"
+                                routerLinkActive="bg-green-800 text-white border-green-800"
                                 class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800">
                                 FAQ
-                            </a>
-                            <a href="/about"
+                            </span>
+                            <span routerLink="/about" (click)="closeMobileMenu()"
+                                routerLinkActive="bg-green-800 text-white border-green-800"
                                 class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800">
                                 About
-                            </a>
+                            </span>
+                            @if(!user()){
                             <button
                                 class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800">
-                                <a href="/account" class="hover:text-ui-fg-base">Login</a>
+                                <span routerLink="/login" (click)="closeMobileMenu()" class="hover:text-ui-fg-base">Login</span>
+                            </button>}
+                            @else{
+                                <button
+                                class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800">
+                                <span routerLink="/login" (click)="logout();closeMobileMenu()" class="hover:text-ui-fg-base">Logout</span>
                             </button>
+                            }
                         </div>
                     </div>
                 </div>
