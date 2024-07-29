@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { TitleService } from '../title.service';
 import { MedusaClientService } from '../medusa-client.service';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Utils } from '../utils/Utils';
 
 @Component({
@@ -15,6 +15,7 @@ import { Utils } from '../utils/Utils';
 export class RegisterComponent {
     private readonly title: TitleService = inject(TitleService);
     private readonly medusa: MedusaClientService = inject(MedusaClientService);
+    private readonly router: Router = inject(Router);
 
     firstName: string = '';
     lastName: string = '';
@@ -47,8 +48,9 @@ export class RegisterComponent {
             return;
          }
          this.medusa.createUser(this.firstName, this.lastName, this.email, this.password)
-                    .then(({ customer }: { customer: any }) => {
+                    .then(() => {
                         this.isLoading = false;
+                        this.router.navigate(['/']);
                     })
                     .catch((error: any) => {
                         this.isLoading = false;

@@ -40,7 +40,9 @@ export class NavigationBarComponent implements OnInit {
     }
 
     checkUser(){
-        this.router.navigate(['/login']);
+        if(!this.user()){
+            this.router.navigate(['/login']);
+        }
     }
 
     logout(){

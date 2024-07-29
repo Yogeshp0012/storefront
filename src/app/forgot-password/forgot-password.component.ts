@@ -20,7 +20,7 @@ export class ForgotPasswordComponent {
     code: string = '';
     mailCode: string = '';
     errorMessage: string = '';
-    successMessage: string = '';
+    successMessage: boolean = false;
     isLoading: boolean = false;
     emailVerified: boolean = false;
     token: string = '';
@@ -55,8 +55,12 @@ export class ForgotPasswordComponent {
     }
 
     resetPassword(){
+        if(this.successMessage){
+            this.errorMessage = 'Password has already been updated';
+            return;
+        }
         this.errorMessage = '';
-        this.successMessage = '';
+        this.successMessage = false;
         this.isLoading = true;
         if(this.password === ''){
             this.errorMessage === "Please enter all details";
@@ -65,8 +69,8 @@ export class ForgotPasswordComponent {
         }
         if(this.code === this.mailCode){
             this.medusa.updatePassword(this.email,this.password, this.token).then(() => {
-                this.successMessage = 'Your password has been updated';
-                this.router.navigate(['/login']);
+                this.successMessage = true;
+                this.isLoading = false;
             }).catch((error: any) => {
                 console.log(error);
                 this.errorMessage === "Failed to update password";

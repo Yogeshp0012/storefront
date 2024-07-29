@@ -5,11 +5,11 @@ import { MedusaClientService } from '../medusa-client.service';
 import { TitleService } from '../title.service';
 
 @Component({
-  selector: 'app-sign-in',
-  standalone: true,
-  imports: [FormsModule, RouterModule],
-  templateUrl: './sign-in.component.html',
-  styleUrl: './sign-in.component.scss'
+    selector: 'app-sign-in',
+    standalone: true,
+    imports: [FormsModule, RouterModule],
+    templateUrl: './sign-in.component.html',
+    styleUrl: './sign-in.component.scss'
 })
 export class SignInComponent implements OnInit {
     private readonly title: TitleService = inject(TitleService);
@@ -21,8 +21,9 @@ export class SignInComponent implements OnInit {
     errorMessage: string = '';
     isLoading: boolean = false;
 
-    ngOnInit(): void{
+    ngOnInit(): void {
         this.title.setTitle('Sign In');
+        console.log(this.router.getCurrentNavigation()?.extras.state);
     }
 
     signIn(): void {
@@ -31,13 +32,13 @@ export class SignInComponent implements OnInit {
         this.medusa.login(
             this.email,
             this.password
-          ).then(() => {
+        ).then(() => {
             this.isLoading = false;
             this.router.navigate(['/']);
-          })
-          .catch((error: any) => {
-            this.errorMessage = "Invalid Email or Password";
-            this.isLoading = false;
-          });
+        })
+            .catch((error: any) => {
+                this.errorMessage = "Invalid Email or Password";
+                this.isLoading = false;
+            });
     }
 }

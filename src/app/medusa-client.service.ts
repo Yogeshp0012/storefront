@@ -45,6 +45,9 @@ export class MedusaClientService {
 
     createUser(first_name: string, last_name: string, email: string, password: string){
         return this.medusa.customers.create({ first_name, last_name, email, password })
+        .then(({ customer }: {customer: any}) => {
+            this.#user.set(customer)
+          })
     }
 
     checkUserLoggedIn(){
