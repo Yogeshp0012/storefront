@@ -27,7 +27,7 @@ export class SignInComponent implements OnInit {
     }
 
     signIn(): void {
-        this.isLoading = false;
+        this.isLoading = true;
         this.errorMessage = '';
         this.medusa.login(
             this.email,
