@@ -19,22 +19,25 @@ export class SignInComponent implements OnInit {
     email: string = '';
     password: string = '';
     errorMessage: string = '';
+    isLoading: boolean = false;
 
     ngOnInit(): void{
         this.title.setTitle('Sign In');
     }
 
     signIn(): void {
+        this.isLoading = false;
         this.errorMessage = '';
         this.medusa.login(
             this.email,
             this.password
-          )
-          .then(({ customer }: {customer: any}) => {
+          ).then(() => {
+            this.isLoading = false;
             this.router.navigate(['/']);
           })
           .catch((error: any) => {
             this.errorMessage = "Invalid Email or Password";
+            this.isLoading = false;
           });
     }
 }

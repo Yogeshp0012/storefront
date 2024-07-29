@@ -18,7 +18,7 @@ export class NavigationBarComponent implements OnInit {
     mounted = false;
     mobileMenu: boolean = false;
     isMenuOpen: boolean = false;
-    user: any = {};
+    user = this.medusa.user;
 
     @HostListener('window:scroll', [])
     onWindowScroll() {
@@ -26,13 +26,8 @@ export class NavigationBarComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.mounted = true;
         this.medusa.checkUserLoggedIn()
-        .then((data: any) => {
-            this.user = data;
-        }).catch((error: any) => {
-           this.user = null;
-        });
+        this.mounted = true;
     }
 
     openMobileMenu() {
@@ -49,8 +44,6 @@ export class NavigationBarComponent implements OnInit {
     }
 
     logout(){
-        this.medusa.logout().then(() => {
-            this.router.navigate(['/login']);
-        });
+        this.medusa.logout();
     }
 }

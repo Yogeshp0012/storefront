@@ -8,4 +8,5 @@ export const routes: Routes = [
     { path: 'faq', loadComponent: () => import('./static/faq/faq.component').then(m => m.FaqComponent) },
     { path: 'login', loadComponent: () => import('./sign-in/sign-in.component').then(m => m.SignInComponent) },
     { path: 'register', loadComponent: () => import('./register/register.component').then(m => m.RegisterComponent) },
+    { path: 'forgot-password', loadComponent: () => import('./forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent) },
 ];
