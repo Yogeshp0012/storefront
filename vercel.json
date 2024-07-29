@@ -1,5 +1,5 @@
 {
     "rewrites": [
-      { "source": "/(.*)", "destination": "http://your-backend.azure.com/$1" }
+      { "source": "/(.*)", "destination": "http://52.172.199.176:9000/$1" }
     ]
   }
