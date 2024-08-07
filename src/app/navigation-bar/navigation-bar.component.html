@@ -1,4 +1,120 @@
 <nav [ngClass]="{'shadow': isScrolled}" class="bg-white fixed w-full top-0 z-50">
+    @if(cart() && showCart){
+    <div class="relative z-10" role="dialog" aria-modal="true">
+        <div class="hidden sm:fixed sm:inset-0 sm:block sm:bg-gray-500 sm:bg-opacity-75 sm:transition-opacity"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-stretch justify-center text-center sm:items-center sm:px-6 lg:px-8">
+                <div class="flex w-full max-w-3xl transform text-left text-base transition sm:my-8">
+                    <form
+                        class="relative flex w-full flex-col overflow-hidden bg-white pb-8 pt-6 sm:rounded-lg sm:pb-6 lg:py-8">
+                        <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8">
+                            <h2 class="text-lg font-medium text-green-800">Shopping Cart</h2>
+                            <button (click)="closeCart()" type="button" class="text-gray-400 hover:text-gray-500">
+                                <span class="sr-only">Close</span>
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                    stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        @if(cart().items.length === 0){
+                        <div class="w-full mx-auto mt-auto sm:px-6 lg:px-8 md:py-10 flex items-center justify-center">
+                            There are no items in your cart.
+                        </div>
+                        <div class="mt-8 md:mt-0 flex justify-center px-4 sm:px-6 lg:px-8">
+                            <button routerLink="/store/all" (click)="showCart = false"
+                                class="rounded-sm bg-green-800 px-6 py-3 text-md font-semibold text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800">
+                                Start Shopping
+                            </button>
+                        </div>
+                        }
+                        @if(isCartLoading){
+                        <div class="w-full mx-auto mt-auto sm:px-6 lg:px-8 md:py-10 flex items-center justify-center">
+                            <div role="status">
+                                <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin fill-green-500"
+                                    viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                        fill="currentColor" />
+                                    <path
+                                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                        fill="currentFill" />
+                                </svg>
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                        }
+                        @else{
+                        <section aria-labelledby="cart-heading" class="mt-auto sm:px-6 lg:px-8">
+                            <ul role="list" class="px-4 sm:px-6 lg:px-8">
+                                <h2 id="cart-heading" class="sr-only">Items in your shopping cart</h2>
+                                @for(item of cart().items; track item.id){
+                                <li class="flex py-8 text-sm  cart-item sm:items-center">
+                                    <img [src]="item.thumbnail"
+                                        alt="Front of zip tote bag with white canvas, black canvas straps and handle, and black zipper pulls."
+                                        class="h-36  flex-none rounded-lg border border-gray-200 ">
+                                    <div
+                                        class="ml-4 grid flex-auto grid-cols-1 grid-rows-1 items-start gap-x-5 gap-y-3 sm:ml-6 sm:flex sm:items-center sm:gap-0">
+                                        <div class="row-end-1 flex-auto sm:pr-6">
+                                            <h3 class="font-medium  text-green-800">
+                                                {{item.title}}
+                                            </h3>
+                                            <p class="mt-1 text-gray-500">Size: {{item.description}}</p>
+                                            <p class="mt-1 text-gray-500">Quantity: {{item.quantity}}</p>
+                                            <button (click)="removeItem(item.id)" type="button"
+                                                class="mt-1 font-medium text-red-600 hover:text-red-500 sm:ml-0 sm:mt-2">
+                                                <span>Remove</span>
+                                            </button>
+                                        </div>
+                                        <p
+                                            class="row-span-2 row-end-2 font-medium text-gray-900 sm:order-1 sm:ml-6 sm:w-1/3 sm:flex-none sm:text-right">
+                                            ₹{{(item.subtotal / 100).toFixed(2)}}</p>
+                                    </div>
+                                </li>
+                                }
+                            </ul>
+                        </section>
+                        }
+                        @if(cart().items.length !== 0){
+                        <section aria-labelledby="summary-heading" class="mt-auto sm:px-6 lg:px-8">
+                            <div class="bg-gray-50 p-6 sm:rounded-lg sm:p-8">
+                                <h2 id="summary-heading" class="sr-only">Order summary</h2>
+
+                                <div class="flow-root">
+                                    <dl class="-my-4 divide-y divide-gray-200 text-sm">
+                                        <div class="flex items-center justify-between py-4">
+                                            <dt class="text-gray-600">Shipping</dt>
+                                            <dd class="font-medium text-green-800">Calculated at Next Step</dd>
+                                        </div>
+                                        <div class="flex items-center justify-between py-4">
+                                            <dt class="text-gray-600">Inclusive Of Tax</dt>
+                                            <dd class="font-medium text-gray-900">₹{{(cart().tax_total /
+                                                100).toFixed(2)}}</dd>
+                                        </div>
+                                        <div class="flex items-center justify-between py-4">
+                                            <dt class="text-base font-medium text-gray-900">Order total
+                                            </dt>
+                                            <dd class="text-base font-medium text-gray-900">₹{{(cart().subtotal /
+                                                100).toFixed(2)}}</dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="mt-8 flex justify-end px-4 sm:px-6 lg:px-8">
+                            <button routerLink="/store/all"
+                                class="rounded-sm bg-green-800 px-6 py-3 text-md font-semibold text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800">
+                                Continue to Checkout
+                            </button>
+                        </div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
     <div class="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
         <div class="flex h-[84px] justify-between items-center">
             <div class="flex px-2 lg:px-0">
@@ -14,18 +130,18 @@
             <div class="flex px-2 lg:px-0 space-x-4">
                 <div class="hidden lg:ml-6 lg:flex lg:space-x-8">
                     <div class="hover:text-green-800 inline-flex items-center border-none px-1 pt-1 text-md font-normal cursor-pointer"
-                        routerLinkActive="font-semibold text-green-800" routerLink="/store">
+                        routerLinkActive="font-semibold text-green-800" routerLink="/store/all">
                         Women
                     </div>
-                    <a class="inline-flex items-center border-none px-1 pt-1 text-md font-normal" href="/store">
+                    <span class="inline-flex items-center border-none px-1 pt-1 text-md font-normal cursor-not-allowed">
                         Men
                         <span
                             class="ml-2 inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-green-800 z-100 text-white ">Coming
                             Soon</span>
-                    </a>
+                    </span>
                     <div routerLink="faq" routerLinkActive="font-semibold text-green-800"
                         class="hover:text-green-800 cursor-pointer inline-flex items-center border-none px-1 pt-1 text-md font-normal"
-                        href="/store">
+                        href="/store/all">
                         FAQ
                     </div>
                     <div routerLink="about" routerLinkActive="font-semibold text-green-800"
@@ -35,7 +151,7 @@
                 </div>
             </div>
             <div class="hidden lg:flex items-center space-x-4">
-                <a href="/" class="text-gray-400 hover:text-green-800">
+                <span (click)="openSearch = true;" class="text-gray-400 cursor-pointer hover:text-green-800">
                     <span class="sr-only">Search</span>
                     <svg class="d-inline-flex align-items-center justify-content-center" width="28" height="28"
                         viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
@@ -49,7 +165,7 @@
                             </clipPath>
                         </defs>
                     </svg>
-                </a>
+                </span>
                 <div class="relative flex-shrink-0">
                     <div>
                         <span class="cursor-pointer hover:text-ui-fg-base" (click)="checkUser()">
@@ -68,7 +184,7 @@
                         </span>
                     </div>
                 </div>
-                <a class="group ml-2 flex items-center" href="/cart" data-testid="nav-cart-link">
+                <span (click)="openCart()" class="cursor-pointer group ml-2 flex items-center">
                     <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_116_450)">
                             <path
@@ -80,34 +196,30 @@
                             </clipPath>
                         </defs>
                     </svg>
-                    <span class="bg-green-800  px-2 rounded-xl text-xs py-1 mb-4 font-medium text-white">1</span>
-                </a>
+                    @if(cart()){
+                    <span
+                        class="bg-green-800  px-2 rounded-xl text-xs py-1 mb-4 font-medium text-white">{{cart().items.length}}</span>
+                    }
+                </span>
+
                 @if(user()){
                 <button (click)="logout()" type="button"
                     class="px-2 cursor-pointer w-full h-10 bg-green-800 hover:bg-green-900 border-none text-white outline-none border-0 rounded-md text-md">
                     Logout
                 </button>
                 }
-                <!-- <div
-                    class="small:block absolute top-[calc(100%)] right-0 bg-white border-x border-b border-gray-200 w-[420px] text-ui-fg-base">
-                    <div class="p-4 flex items-center justify-center">
-                        <h3 class="text-lg font-semibold">Cart</h3>
-                    </div>
-                    <div class="overflow-y-scroll max-h-[402px] px-4 grid grid-cols-1 gap-y-8 no-scrollbar p-px">
-                        test
-                    </div>
-                </div> -->
+
             </div>
             <div class="flex items-center lg:hidden">
-                <a class="text-gray-400 hover:text-green-800" href="/search" data-testid="nav-search-link">
+                <span (click)="openSearch = true;" class="text-gray-400 hover:text-green-800">
                     <span class="sr-only">Search</span>
                     <svg class="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                     </svg>
-                </a>
-                <a class="group ml-2 flex items-center" href="/cart" data-testid="nav-cart-link">
+                </span>
+                <span class="group ml-2 flex items-center" (click)="openCart()" data-testid="nav-cart-link">
                     <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_116_450)">
                             <path
@@ -119,8 +231,11 @@
                             </clipPath>
                         </defs>
                     </svg>
-                    <span class="bg-green-800  px-2 rounded-xl text-xs py-1 mb-4 font-medium text-white">1</span>
-                </a>
+                    @if(cart()){
+                    <span
+                        class="bg-green-800  px-2 rounded-xl text-xs py-1 mb-4 font-medium text-white">{{cart().items.length}}</span>
+                    }
+                </span>
                 <button (click)="openMobileMenu()" type="button"
                     class="inline-flex items-center justify-center rounded-md p-2 ml-1 text-black hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
                     aria-controls="mobile-menu" aria-expanded="false">
@@ -156,7 +271,7 @@
                             </button>
                         </div>
                         <div class="mt-6 space-y-1">
-                            <div routerLink="/store" (click)="closeMobileMenu()"
+                            <div routerLink="/store/all" (click)="closeMobileMenu()"
                                 routerLinkActive="bg-green-800 text-white border-green-800"
                                 class="block border-transparent border-l-4 py-2 pl-3 pr-4 text-gray-600 font-medium">
                                 Women
@@ -182,12 +297,14 @@
                             @if(!user()){
                             <button
                                 class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800">
-                                <span routerLink="/login" (click)="closeMobileMenu()" class="hover:text-ui-fg-base">Login</span>
+                                <span routerLink="/login" (click)="closeMobileMenu()"
+                                    class="hover:text-ui-fg-base">Login</span>
                             </button>}
                             @else{
-                                <button
+                            <button
                                 class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800">
-                                <span routerLink="/login" (click)="logout();closeMobileMenu()" class="hover:text-ui-fg-base">Logout</span>
+                                <span routerLink="/login" (click)="logout();closeMobileMenu()"
+                                    class="hover:text-ui-fg-base">Logout</span>
                             </button>
                             }
                         </div>
@@ -198,3 +315,62 @@
         </div>
     </div>
 </nav>
+@if(openSearch){
+<div class="relative z-[75]">
+    <div class="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-md opacity-100 h-screen w-screen">
+    </div>
+    <div class="fixed inset-0 px-5 sm:p-0">
+        <div
+            class="flex flex-col justify-start w-full h-fit transform p-5 items-center text-left align-middle transition-all max-h-[75vh] bg-transparent shadow-none">
+            <div class="flex absolute flex-col h-fit w-full md:w-[50%]">
+                <div class="flex items-center justify-between border-2 border-b-green-800 bg-white rounded-md">
+                    <svg class="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20"
+                        fill="currentColor" aria-hidden="true">
+                        <path fillRule="evenodd"
+                            d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                            clipRule="evenodd" />
+                    </svg>
+                    <input (keyup)="onSearch()" [(ngModel)]="searchString" name="searchString"
+                        placeholder="Search Products"
+                        class="h-12 w-full border-0 pl-11 pr-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 focus:ring-green-800 outline-none sm:text-sm"
+                        role="combobox" aria-expanded="false" aria-controls="options" />
+                        <button (click)="openSearch=false;" type="button"
+                        class="text-gray-400 hover:text-gray-500 focus:outline-none mr-2">
+                        <span class="sr-only">Close menu</span>
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex-1 overflow-y-auto mt-6 bg-white p-6 pb-10">
+                    <div class="custom-height grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        @for(product of filteredProducts; track product.id){
+                        <div [routerLink]="['/product', product.handle]" class="group relative">
+                            <img class="cursor-pointer min-h-72 aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 lg:aspect-none group-hover:opacity-90 lg:h-72 transition duration-300 ease-in-out transform group-hover:scale-105"
+                                [src]="product.thumbnail" alt="Product Image" />
+                            <div class="mt-4 flex flex-col justify-between">
+                                <div>
+                                    <span class="w-full cursor-pointer text-md font-semibold text-gray-900">
+                                        {{product.name}}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="cursor-pointer text-md text-green-800">
+                                        ₹{{product.price}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+}

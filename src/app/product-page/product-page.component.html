@@ -1,1 +1,166 @@
-<p>product-page works!</p>
+<div class="content items-center justify-center">
+    <div class="flex items-center justify-center bg-green-800 px-6 py-2.5 sm:px-3.5">
+        <p class="text-sm leading-6 text-white">
+            Use <strong>'VASTRAGRAH'</strong> for free shipping above Rs 2000. Current delivery time is 4-7 days.
+        </p>
+    </div>
+    <div class="bg-white mx-auto max-w-7xl px-6 pb-8 pt-10 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2  gap-8">
+            <div class="flex flex-col-reverse">
+                <div class="mx-auto mt-6 w-full max-w-2xl block lg:max-w-none">
+                    <div class="grid grid-cols-4 gap-6" aria-orientation="horizontal" role="tablist">
+                        @for(productImage of this.product.images; track productImage){
+                        <button (click)="this.selectedImage = productImage.url"
+                            class="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none"
+                            aria-controls="tabs-1-panel-1" role="tab" type="button"> <span class="sr-only">Angled
+                                view</span>
+                            <span class="absolute inset-0 overflow-hidden"> <img [src]="productImage.url"
+                                    class="h-full w-full object-cover object-center outline-none"
+                                    alt="this.product.title"> </span>
+
+                        </button>
+                        }
+                    </div>
+                </div>
+                <div class="w-full">
+                    <div id="tabs-1-panel-1" role="tabpanel" tabindex="0">
+                        <img [src]="selectedImage"
+                            alt="Product image 1" class="w-full object-cover object-center">
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div id="product-info">
+                    <div class="flex flex-col gap-y-4 lg:max-w-[500px] mx-auto">
+                        <div class="flex gap-2 text-xl">Collection:
+                            <span [routerLink]="['/store', this.product.collection.handle]"
+                                class="text-green-800 cursor-pointer font-semibold">{{product.collection.title}}</span>
+                        </div>
+                        <h2 class="text-3xl leading-10 font-medium">{{product.title}}</h2>
+                        <span class="text-lg font-normal text-gray-800">
+                            {{product.description}}
+                        </span>
+                    </div>
+                </div>
+                <div class="mt-4 flex flex-col gap-y-4 lg:max-w-[500px] mx-auto">
+                    <div class="flex flex-col gap-y-2">
+                        <div class="flex flex-col gap-y-4">
+                            <div>
+                                <div class="flex flex-col gap-y-3">
+                                    <span class="text-sm">Selected Size: <span
+                                            class="font-semibold text-green-800">{{selectedSize}}</span></span>
+                                    <div class="flex flex-wrap justify-between gap-2">
+                                        <button [ngClass]="{'bg-green-800 text-white border-green-800': selectedSize == 'XS'}" (click)="selectedSize = 'XS'"
+                                            class=" border   h-10 rounded-md p-2 flex-1  text-sm">
+                                            XS
+                                        </button>
+                                        <button [ngClass]="{'bg-green-800 text-white border-green-800': selectedSize == 'S'}" (click)="selectedSize = 'S'"
+                                            class=" border   h-10 rounded-md p-2 flex-1  text-sm">
+                                            S
+                                        </button>
+                                        <button [ngClass]="{'bg-green-800 text-white border-green-800': selectedSize == 'M'}" (click)="selectedSize = 'M'"
+                                            class=" border   h-10 rounded-md p-2 flex-1  text-sm">
+                                            M
+                                        </button>
+                                        <button [ngClass]="{'bg-green-800 text-white border-green-800': selectedSize == 'L'}" (click)="selectedSize = 'L'"
+                                            class=" border   h-10 rounded-md p-2 flex-1  text-sm">
+                                            L
+                                        </button>
+                                        <button [ngClass]="{'bg-green-800 text-white border-green-800': selectedSize == 'XL'}" (click)="selectedSize = 'XL'"
+                                            class=" border   h-10 rounded-md p-2 flex-1  text-sm">
+                                            XL
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-y-3">
+                                <span class="text-sm">
+                                    Selected Quantity:
+                                </span>
+                                <div class="flex items-center gap-x-2 border w-32 px-1 py-1 rounded-md">
+                                    <button (click)="decrement()" class="pl-2  w-12 py-1 text-green-800 text-4xl  px-2 rounded-md">
+                                        -
+                                    </button>
+                                    <span class="w-8 text-sm text-center">{{selectedQuantity}}</span>
+                                    <button (click)="increment()"  class="text-green-800 w-12 text-2xl pr-2 py-1 px-2 rounded-md">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h-px w-full border-b border-gray-200 mt-1">
+                        </div>
+                        <div class="flex flex-col font-semibold text-2xl mt-2">
+                            Rs. {{variants[selectedSize] !== undefined ?  variants[selectedSize].amount : '799.00'}}
+                        </div>
+                        @if(addingToCart){
+                            <button (click)="addToCart()"
+                                class="mt-1 w-full h-10 border-none  outline-none border-0 rounded-md bg-gray-100 text-black cursor-not-allowed">
+                                <div role="status">
+                                    <svg aria-hidden="true" class="inline w-6 h-6 text-gray-200 animate-spin fill-green-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                    </svg>
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </button>
+                        }
+                        @else{
+                            <button (click)="addToCart()" [ngClass]="{
+                                'bg-green-800 hover:bg-green-900 text-white': variants[selectedSize] !== undefined && selectedQuantity <= variants[selectedSize].inventory_quantity,
+                                'bg-gray-100 text-black cursor-not-allowed': variants[selectedSize] === undefined || selectedQuantity > variants[selectedSize].inventory_quantity
+                            }"
+                                class="mt-1 cursor-pointer w-full h-10 border-none  outline-none border-0 rounded-md">
+                                {{variants[selectedSize] !== undefined ?
+                                    selectedQuantity > variants[selectedSize].inventory_quantity ? "Out of Stock" : "Add to Cart"
+                                       : 'Out of Stock'}}
+                            </button>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 mt-20">
+            <div class="h-px w-full border-b border-gray-200 mt-1">
+            </div>
+                <div class="flex flex-col items-center text-center mt-20 mb-16">
+                    <span class="text-3xl text-black mb-6 font-semibold">
+                        You May Also Like
+                    </span>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-8 mt-4">
+                        @if(isRelatedProductsLoading){
+                            @for(i of [1,2,3,4]; track i){
+                            <div class="group relative skeleton-loader  min-h-96 aspect-h-1 aspect-w-1 w-full lg:h-80 lg:aspect-none">
+                                <div class="skeleton-image"></div>
+                                <div class="skeleton-text"></div>
+                                <div class="skeleton-price"></div>
+                            </div>
+                            }
+                            }
+                            @else{
+                            @for(relatedProduct of relatedProducts; track relatedProduct.id){
+                            <div [routerLink]="['/product', relatedProduct.handle]" class="group relative">
+                                <img  class="cursor-pointer min-h-96 aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 lg:aspect-none group-hover:opacity-90 lg:h-80 transition duration-300 ease-in-out transform group-hover:scale-105"
+                                    [src]="relatedProduct.thumbnail" alt="Product Image" />
+                                <div class="mt-4 flex flex-col justify-between">
+                                    <div>
+                                        <span class="w-full cursor-pointer text-md font-semibold text-gray-900">
+                                            {{relatedProduct.name}}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span class="cursor-pointer text-md text-green-800">
+                                            ₹{{relatedProduct.price}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                            }
+                            </div>
+                </div>
+
+        </div>
+    </div>
+</div>

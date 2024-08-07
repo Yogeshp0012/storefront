@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, Component, inject, OnChanges, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MedusaClientService } from '../medusa-client.service';
@@ -20,13 +20,19 @@ export class SignInComponent implements OnInit {
     password: string = '';
     errorMessage: string = '';
     isLoading: boolean = false;
+    user = this.medusa.user;
 
     ngOnInit(): void {
+        this.medusa.checkUserLoggedIn().then((data: any) => {
+            if(this.user()){
+                this.router.navigate(['/']);
+            }
+          });
         this.title.setTitle('Sign In');
-        console.log(this.router.getCurrentNavigation()?.extras.state);
     }
 
     signIn(): void {
+        console.log(this.user());
         this.isLoading = true;
         this.errorMessage = '';
         this.medusa.login(

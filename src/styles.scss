@@ -92,3 +92,92 @@ html {
         opacity: 1;
         overflow: visible
     }
+
+    .skeleton-loader {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .skeleton-image {
+        width: 100%;
+        height: 300px;
+        background-color: #e0e0e0;
+        border-radius: 8px;
+        animation: pulse 1.5s infinite;
+    }
+
+    .skeleton-text {
+        width: 80%;
+        height: 20px;
+        background-color: #e0e0e0;
+        border-radius: 4px;
+        margin-top: 10px;
+        animation: pulse 1.5s infinite;
+    }
+
+    .skeleton-price {
+        width: 50%;
+        height: 20px;
+        background-color: #e0e0e0;
+        border-radius: 4px;
+        margin-top: 5px;
+        animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    .custom-height{
+        height: 32rem;
+    }
+
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cart-item {
+    opacity: 0;
+    animation: slideIn 0.3s forwards;
+    animation-delay: calc(var(--base-delay) * var(--item-index));
+}
+
+/* Apply the item index as a CSS variable */
+.cart-item:nth-child(1) { --item-index: 1; }
+.cart-item:nth-child(2) { --item-index: 2; }
+.cart-item:nth-child(3) { --item-index: 3; }
+.cart-item:nth-child(4) { --item-index: 4; }
+.cart-item:nth-child(5) { --item-index: 5; }
+.cart-item:nth-child(6) { --item-index: 6; }
+.cart-item:nth-child(7) { --item-index: 7; }
+.cart-item:nth-child(8) { --item-index: 8; }
+.cart-item:nth-child(9) { --item-index: 9; }
+.cart-item:nth-child(10) { --item-index: 10; }
+.cart-item:nth-child(11) { --item-index: 11; }
+.cart-item:nth-child(12) { --item-index: 12; }
+.cart-item:nth-child(13) { --item-index: 13; }
+.cart-item:nth-child(14) { --item-index: 14; }
+.cart-item:nth-child(15) { --item-index: 15; }
+.cart-item:nth-child(16) { --item-index: 16; }
+.cart-item:nth-child(17) { --item-index: 17; }
+.cart-item:nth-child(18) { --item-index: 18; }
+.cart-item:nth-child(19) { --item-index: 19; }
+.cart-item:nth-child(20) { --item-index: 20; }
