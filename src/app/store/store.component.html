@@ -1,4 +1,4 @@
-<div class="flex flex-col sm:flex-row sm:items-start py-6 content">
+<!-- <div class="flex flex-col sm:flex-row sm:items-start py-6 content">
     <div class="hidden md:flex  gap-12 py-4 mb-8 sm:px-0 pl-6 sm:min-w-[250px] sm:ml-[1.675rem]">
         <div class="flex gap-x-3 flex-col gap-y-3">
             <p class="font-semibold">Filter Products By</p>
@@ -20,7 +20,7 @@
             class="text-3xl mt-8 w-full flex justify-center md:justify-start md:px-4 font-semibold tracking-tight text-green-800">
             All Products
         </h2>
-        <div class="px-10 md:px-4 mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        <div class="px-10 md:px-4 mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
             @if(isLoading){
             @for(i of [1,2,3,4]; track i){
             <div class="group relative skeleton-loader  min-h-96 aspect-h-1 aspect-w-1 w-full lg:h-80 lg:aspect-none">
@@ -33,7 +33,7 @@
             @else{
             @for(product of products; track product.id){
             <div class="group relative">
-                <img class="cursor-pointer min-h-96 aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 lg:aspect-none group-hover:opacity-90 lg:h-80 transition duration-300 ease-in-out transform group-hover:scale-105"
+                <img class="cursor-pointer min-h-80 lg:min-w-52 lg:min-h-48 xl:min-w-64 aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 lg:aspect-none group-hover:opacity-90 lg:h-80 transition duration-300 ease-in-out transform group-hover:scale-105"
                     [src]="product.thumbnail" alt="Product Image" />
                 <div class="mt-4 flex flex-col justify-between">
                     <div>
@@ -51,4 +51,103 @@
             }
             }
         </div>
+    </div> -->
+
+
+
+<div class="content">
+    <div class="flex items-center justify-center bg-green-800 px-6 py-2.5 sm:px-3.5">
+        <p class="text-sm leading-6 text-white">
+            Use <strong>'VASTRAGRAH'</strong> for free shipping above Rs 2000. Current delivery time is 4-7 days.
+        </p>
     </div>
+    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-10">
+            <h1 class="text-3xl font-bold tracking-tight text-green-800">All Products</h1>
+            <div class="flex items-center">
+                <div class="relative inline-block text-left">
+                    <div>
+                        <button type="button" (click)="openFilterMenu = !openFilterMenu;"
+                            class="inline-flex md:hidden group justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
+                            id="menu-button" aria-expanded="false" aria-haspopup="true">
+                            Filter By
+                            <svg class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                    @if(openFilterMenu){
+                    <div class="sm:block md:hidden absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                        <div class="py-1" role="none">
+                            <p (click)="filterCollection('all');openFilterMenu = false;" routerLink="/store/all" routerLinkActive="text-green-800 font-semibold" href="#" class="font-medium text-gray-900 block px-4 py-2 text-sm" role="menuitem"
+                                tabindex="-1" id="menu-item-0">New arrivals</p>
+                                @for (collection of collections; track collection.id) {
+                                    <p (click)="filterCollection(collection.id); openFilterMenu = false;" [routerLink]="['/store', collection.handle]" routerLinkActive="text-green-800 font-semibold" href="#" class="font-medium text-gray-900 block px-4 py-2 text-sm" role="menuitem"
+                                    tabindex="-1" id="menu-item-0">{{collection.title}}</p>
+                                }
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <section aria-labelledby="products-heading" class="pb-24 pt-6">
+            <h2 id="products-heading" class="sr-only">Products</h2>
+
+            <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+                <form class="hidden lg:block">
+                    <h3 class="sr-only">Categories</h3>
+                    <ul role="list" class="space-y-4 pb-6 text-md font-medium text-gray-900">
+                        <li>
+                            Filter Products By
+                        </li>
+                        <li>
+                            <p routerLink="/store/all" routerLinkActive="text-green-800 font-semibold"
+                                (click)="filterCollection('all')" class="cursor-pointer font-normal">New arrivals
+                            </p>
+                        </li>
+                        @for (collection of collections; track collection.id) {
+                        <li>
+                            <p [routerLink]="['/store', collection.handle]"
+                                routerLinkActive="text-green-800 font-semibold"
+                                (click)="filterCollection(collection.id)" class="cursor-pointer font-normal">
+                                {{collection.title}}
+                            </p>
+                        </li>
+                        }
+
+                    </ul>
+                </form>
+                <div class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-3 lg:col-span-3 lg:gap-x-8">
+                    @if(isLoading){
+                    @for(i of [1,2,3,4]; track i){
+                    <div
+                        class="group relative skeleton-loader  min-h-96 aspect-h-1 aspect-w-1 w-full lg:h-80 lg:aspect-none">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-price"></div>
+                    </div>
+                    }
+                    }
+                    @else {
+                    @for(product of products; track product.id){
+                    <span [routerLink]="['/product', product.handle]" class="group text-sm cursor-pointer">
+                        <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-100 group-hover:opacity-75">
+                            <img [src]="product.thumbnail" alt="Product Image"
+                                class="h-full w-full object-cover object-center">
+                        </div>
+                        <h3 class="mt-4 font-semibold text-gray-900">{{product.name}}</h3>
+                        <span class="mt-2 font-normal text-md text-green-800">₹{{product.price}}</span>
+                    </span>
+                    }
+                    }
+                </div>
+            </div>
+        </section>
+    </main>
+</div>

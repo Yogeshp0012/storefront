@@ -1,20 +1,324 @@
 <div class="content-container">
+    @if(openAddressModal){
+    <div class="relative z-[55]" role="dialog" aria-modal="true">
+        <div class="hidden sm:fixed sm:inset-0 sm:block sm:bg-gray-500 sm:bg-opacity-75 sm:transition-opacity"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-stretch justify-center text-center sm:items-center sm:px-6 lg:px-8">
+                <div class="flex w-full max-w-3xl transform text-left text-base transition sm:my-8">
+                    <form
+                        class="px-8 md:px-20 relative flex w-full flex-col overflow-hidden bg-white pb-8 pt-6 sm:rounded-lg sm:pb-6 lg:py-8">
+
+                        <div class="border-b border-gray-900/10 pb-12">
+                            <div class="flex items-center justify-between ">
+                                <h2 class="text-lg font-semibold leading-7 text-green-800">Address Information</h2>
+                                <button (click)="openAddressModal = false;" type="button"
+                                    class="text-gray-400 hover:text-gray-500">
+                                    <span class="sr-only">Close</span>
+                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                        stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                                <div class="sm:col-span-3">
+                                    <label for="address_firstName"
+                                        class="block text-sm font-medium leading-6 text-gray-900">First
+                                        name</label>
+                                    <div class="mt-2">
+                                        <input [(ngModel)]="address_firstName" name="address_firstName" type="text"
+                                            name="first-name"
+                                            class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none sm:text-sm sm:leading-6">
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-3">
+                                    <label for="address_lastName"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Last
+                                        name</label>
+                                    <div class="mt-2">
+                                        <input [(ngModel)]="address_lastName" name="address_lastName" type="text"
+                                            name="first-name"
+                                            class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none sm:text-sm sm:leading-6">
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-3">
+                                    <label for="address_company"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Company / Building
+                                        Name</label>
+                                    <div class="mt-2">
+                                        <input [(ngModel)]="address_company" name="address_company" type="text"
+                                            name="first-name"
+                                            class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none sm:text-sm sm:leading-6">
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-3">
+                                    <label for="address_phone"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Phone Number</label>
+                                    <div class="mt-2">
+                                        <input [(ngModel)]="address_phone" name="address_phone" type="text"
+                                            name="first-name"
+                                            class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none sm:text-sm sm:leading-6">
+                                    </div>
+                                </div>
+
+                                <div class="col-span-full">
+                                    <label for="address_address1"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Address Line 1</label>
+                                    <div class="mt-2">
+                                        <input [(ngModel)]="address_address1" id="address_address1"
+                                            name="address_address1" type="text" autocomplete="email"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none px-2 sm:text-sm sm:leading-6">
+                                    </div>
+                                </div>
+                                <div class="col-span-full">
+                                    <label for="address_address2"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Address Line 2</label>
+                                    <div class="mt-2">
+                                        <input [(ngModel)]="address_address2" id="address_address2"
+                                            name="address_address2" type="text" autocomplete="email"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none px-2 sm:text-sm sm:leading-6">
+                                    </div>
+                                </div>
+
+                                <div class="col-span-full">
+                                    <label for="country"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Address Line 2</label>
+                                    <div class="mt-2">
+                                        <input value="India" disabled id="country" name="country" type="text"
+                                            autocomplete="email"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none px-2 sm:text-sm sm:leading-6">
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-2 sm:col-start-1">
+                                    <label for="address_city"
+                                        class="block text-sm font-medium leading-6 text-gray-900">City</label>
+                                    <div class="mt-2">
+                                        <input [(ngModel)]="address_city" type="text" name="address_city"
+                                            id="address_city"
+                                            class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none sm:text-sm sm:leading-6">
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-2">
+                                    <label for="address_state"
+                                        class="block text-sm font-medium leading-6 text-gray-900">State
+                                        /
+                                        Province</label>
+                                    <div class="mt-2">
+                                        <input [(ngModel)]="address_state" type="text" name="address_state"
+                                            id="address_state"
+                                            class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none sm:text-sm sm:leading-6">
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-2">
+                                    <label for="address_zipcode"
+                                        class="block text-sm font-medium leading-6 text-gray-900">ZIP /
+                                        Postal code</label>
+                                    <div class="mt-2">
+                                        <input [(ngModel)]="address_zipcode" type="text" name="address_zipcode"
+                                            id="address_zipcode"
+                                            class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none sm:text-sm sm:leading-6">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex items-center justify-end gap-x-6">
+                            <button (click)="updateAddress()"
+                                class="rounded-sm bg-green-800 px-6 py-3 text-md font-semibold text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800">
+                                Add Address
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
     <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 mt-[10%] ">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
             <div class="md:col-span-1">
-                <div class="hidden md:block text-lg font-bold text-green-800">
+                <div (click)="selectedStep = '1'"
+                    [ngClass]="{'text-green-800 font-bold cursor-default': selectedStep === '1'}"
+                    class="hidden md:block text-lg  cursor-pointer">
                     Profile
                 </div>
-                <div class="hidden md:block mt-6 text-lg">
+                <div (click)="selectedStep = '2'"
+                    [ngClass]="{'text-green-800 font-bold cursor-default': selectedStep === '2'}"
+                    class="hidden md:block mt-6 text-lg cursor-pointer">
                     Addresses
                 </div>
-                <div class="hidden md:block mt-6 text-lg">
+                <div (click)="selectedStep = '3'"
+                    [ngClass]="{'text-green-800 font-bold cursor-default': selectedStep === '3'}"
+                    class="hidden md:block mt-6 text-lg cursor-pointer">
                     Orders
                 </div>
             </div>
             <div class="md:col-span-2 font-semibold text-2xl">
-                        Hello, {{name}}
+                <div class="sm:block md:hidden mb-4">
+                    <div class="relative">
+                        <select [(ngModel)]="selectedStep"
+                            class="block appearance-none w-full bg-white border border-green-800 text-green-800 py-2 px-2 rounded leading-tight focus:outline-none text-sm"
+                            id="grid-state">
+                            <option value="1">Profile</option>
+                            <option value="2">Addresses</option>
+                            <option value="3">Orders</option>
+                        </select>
+                        <div
+                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                @if(selectedStep === '1'){
+                <div>
+                    Hello, {{name}}
+                    <div class="mt-3">
+                        <label for="firstName" class="block text-sm font-medium leading-6 text-gray-900">First
+                            Name</label>
+                        <div class="mt-2">
+                            <div
+                                class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-green-800 sm:max-w-md">
+                                <input [(ngModel)]="firstName" name="firstName" type="text" id="firstName"
+                                    class="block text-sm font-normal ml-2 flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 ring-0 outline-none sm:text-sm sm:leading-6"
+                                    placeholder="Enter First Name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label for="lastName" class="block text-sm font-medium leading-6 text-gray-900">Last
+                            Name</label>
+                        <div class="mt-2">
+                            <div
+                                class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-green-800 sm:max-w-md">
+                                <input [(ngModel)]="lastName" name="lastName" type="text" id="lastName"
+                                    class="block text-sm font-normal ml-2 flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 outline-none ring-0 sm:text-sm sm:leading-6"
+                                    placeholder="Enter Last Name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
+                        <div class="mt-2">
+                            <div
+                                class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-green-800 sm:max-w-md">
+                                <input [(ngModel)]="email" name="email" type="email" id="email"
+                                    class="block text-sm font-normal ml-2 flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 outline-none ring-0 sm:text-sm sm:leading-6"
+                                    placeholder="Enter Email">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label for="phone" class="block text-sm font-medium leading-6 text-gray-900">Phone
+                            Number</label>
+                        <div class="mt-2">
+                            <div
+                                class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-green-800 sm:max-w-md">
+                                <input [(ngModel)]="phone" name="phone" type="text" id="phone"
+                                    class="block text-sm font-normal ml-2 flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 outline-none ring-0 sm:text-sm sm:leading-6"
+                                    placeholder="Enter Phone No.">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Enter New
+                            password (Optional)</label>
+                        <div class="mt-2">
+                            <div
+                                class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-green-800 sm:max-w-md">
+                                <input [(ngModel)]="password" name="password" type="password" id="password"
+                                    class="block text-sm font-normal ml-2 flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 outline-none ring-0 sm:text-sm sm:leading-6"
+                                    placeholder="Enter New Password">
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            @if(errorMessage){
+                            <div>
+                                <span class="text-red-800 text-sm flex ">{{errorMessage}}</span>
+                            </div>
+                            }
+                            @if(successMessage){
+                            <div>
+                                <span class="text-green-800 text-sm flex">{{successMessage}}</span>
+                            </div>
+                            }
+                        </div>
+                        @if(isLoading){
+                        <button type="button"
+                            class="mt-6 w-full max-w-md rounded-sm bg-white px-3 py-2 text-md font-semibold text-white shadow-sm hover:bg-white hover:text-green-800 ring-1 ring-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800">
+                            <div role="status">
+                                <svg aria-hidden="true"
+                                    class="inline w-6 h-6 text-gray-200 animate-spin  fill-green-800"
+                                    viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                        fill="currentColor" />
+                                    <path
+                                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                        fill="currentFill" />
+                                </svg>
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </button>
+                        }
+                        @else{
+                        <button type="button" (click)="updateProfile()"
+                            class="mt-6 w-full max-w-md text-sm rounded-sm bg-green-800 px-3 py-3 text-md font-semibold text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800">
+                            Update
+                        </button>
+                        }
+                    </div>
+                </div>
+                }
+                @if(selectedStep === '2'){
+                <div>
+                    Hello, {{name}}
+                    <div class="mt-3">
+                        @if(addressIsLoading){
+                            <div class="w-full mx-auto mt-auto sm:px-6 lg:px-8 md:py-10 flex items-center justify-center">
+                                <div role="status">
+                                    <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin fill-green-500"
+                                        viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                            fill="currentColor" />
+                                        <path
+                                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                            fill="currentFill" />
+                                    </svg>
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        }
+                        @else{
+                        @if(addresses.length <= 0){ <div class="text-green-800 text-sm">No addresses found.</div>
+                    }
+                    @else {
+                    <div class="grid grid-cols-1 gap-4 mt-4">
+                        @for(address of addresses; track address.id){
+                            <div>
+                                asdasd
+                            </div>
+                        }
+                        </div>
+
+                    }
+                    <button type="button" (click)="openAddressModal=true;"
+                        class="mt-6 w-full max-w-md text-sm rounded-sm bg-green-800 px-3 py-3 text-md font-semibold text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800">
+                        Add New Address
+                    </button>
+                    }
+                </div>
             </div>
+            }
         </div>
     </div>
+</div>
 </div>

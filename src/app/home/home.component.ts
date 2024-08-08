@@ -43,7 +43,6 @@ export class HomeComponent implements OnInit {
                 return {id: product.id,handle: product.handle,thumbnail: product.thumbnail, name: product.title, price: product.minPrice};
             });
             this.isLoading = false;
-            console.log(this.newArrivals);
           })
         this.medusa.getCollections().then(async ({ collections, limit, offset, count }: { collections: any, limit: any, offset: any, count: any }) => {
             this.collections = collections;

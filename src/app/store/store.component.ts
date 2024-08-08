@@ -17,6 +17,7 @@ export class StoreComponent implements OnInit {
     products: any[] = [];
     collections: any[] = [];
     isLoading: boolean = false;
+    openFilterMenu: boolean = false;
 
     ngOnInit(): void {
         this.isLoading = true;
@@ -41,7 +42,7 @@ export class StoreComponent implements OnInit {
                                 }
                             });
                             product.minPrice = (minPrice / 100).toFixed(2);
-                            return { id: product.id, thumbnail: product.thumbnail, name: product.title, price: product.minPrice };
+                            return { id: product.id,handle:product.handle, thumbnail: product.thumbnail, name: product.title, price: product.minPrice };
                         });
                         this.isLoading = false;
                 });
@@ -64,7 +65,7 @@ export class StoreComponent implements OnInit {
                             }
                         });
                         product.minPrice = (minPrice / 100).toFixed(2);
-                        return { id: product.id, thumbnail: product.thumbnail, name: product.title, price: product.minPrice };
+                        return { id: product.id,handle:product.handle, thumbnail: product.thumbnail, name: product.title, price: product.minPrice };
                     });
                     this.isLoading = false;
             })
@@ -91,7 +92,7 @@ export class StoreComponent implements OnInit {
                             }
                         });
                         product.minPrice = (minPrice / 100).toFixed(2);
-                        return { id: product.id, thumbnail: product.thumbnail, name: product.title, price: product.minPrice };
+                        return { id: product.id,handle:product.handle, thumbnail: product.thumbnail, name: product.title, price: product.minPrice };
                     });
                     this.isLoading = false;
             })
@@ -113,7 +114,7 @@ export class StoreComponent implements OnInit {
                             }
                         });
                         product.minPrice = (minPrice / 100).toFixed(2);
-                        return { id: product.id, thumbnail: product.thumbnail, name: product.title, price: product.minPrice };
+                        return { id: product.id,handle:product.handle, thumbnail: product.thumbnail, name: product.title, price: product.minPrice };
                     });
                     this.isLoading = false;
             });

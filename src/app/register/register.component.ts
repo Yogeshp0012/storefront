@@ -53,7 +53,7 @@ export class RegisterComponent implements OnInit {
             this.isLoading = false;
             return;
         }
-        this.medusa.createUser(this.firstName, this.lastName, this.email, this.password)
+        this.medusa.createUser(this.firstName, this.lastName, this.email, this.password, this.phone)
             .then(() => {
                 this.medusa.sendSignUpEmail(this.email, this.firstName+" "+this.lastName).subscribe({
                     next: (data: any) => {

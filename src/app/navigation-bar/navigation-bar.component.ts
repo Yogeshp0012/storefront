@@ -94,6 +94,7 @@ export class NavigationBarComponent implements OnInit {
 
     logout() {
         this.medusa.logout();
+        this.router.navigate(['/']);
     }
 
     onSearch() {

@@ -58,18 +58,17 @@ export class MedusaClientService {
         return this.medusa.auth.exists(email);
     }
 
-    createUser(first_name: string, last_name: string, email: string, password: string) {
-        return this.medusa.customers.create({ first_name, last_name, email, password })
+    createUser(first_name: string, last_name: string, email: string, password: string, phone: string) {
+        return this.medusa.customers.create({ first_name, last_name, email, password, phone })
             .then(({ customer }: { customer: any }) => {
                 this.#user.set(customer);
             })
     }
 
     checkUserLoggedIn() {
-        return this.medusa.auth.getSession().then((data: any) => {
-            this.#user.set(data)
+        return this.medusa.auth.getSession().then(({ customer }: {customer: any}) => {
+            this.#user.set(customer)
         }).catch((err: any) => {
-            console.log(err);
         });
     }
 
@@ -174,5 +173,31 @@ export class MedusaClientService {
 
     subscribe(email: string) {
         return this.http.post(`${environment.BACKEND_URL}/store/subscribe`, { email });
+    }
+
+    updateProfile(first_name: string, last_name: string, email: string, phone: string,password: string = '') {
+        if (password == '') {
+            return this.medusa.customers.update({ first_name, last_name, email, phone })
+                .then(({ customer }: { customer: any }) => {
+                    this.#user.set(customer);
+                })
+        }
+        else{
+        return this.medusa.customers.update({ first_name, last_name, email, password, phone })
+            .then(({ customer }: { customer: any }) => {
+                this.#user.set(customer);
+            })
+        }
+    }
+
+    addAddress(address: any) {
+        return this.medusa.customers.addresses.addAddress({
+            address: {
+                ...address,
+            }
+          })
+          .then(({ customer }: {customer: any}) => {
+            this.#user.set(customer);
+          })
     }
 }
