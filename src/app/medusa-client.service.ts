@@ -51,6 +51,7 @@ export class MedusaClientService {
         return this.medusa.auth.authenticate({ email, password })
             .then(({ customer }: { customer: any }) => {
                 this.#user.set(customer)
+                this.checkCart();
             })
     }
 
@@ -62,11 +63,12 @@ export class MedusaClientService {
         return this.medusa.customers.create({ first_name, last_name, email, password, phone })
             .then(({ customer }: { customer: any }) => {
                 this.#user.set(customer);
+                this.checkCart();
             })
     }
 
     checkUserLoggedIn() {
-        return this.medusa.auth.getSession().then(({ customer }: {customer: any}) => {
+        return this.medusa.auth.getSession().then(({ customer }: { customer: any }) => {
             this.#user.set(customer)
         }).catch((err: any) => {
         });
@@ -119,6 +121,18 @@ export class MedusaClientService {
 
     getCartId() {
         return localStorage.getItem("cart_id");
+    }
+
+    clearCart() {
+        localStorage.removeItem("cart_id");
+        this.checkCart();
+    }
+
+    createPaymentSession() {
+        this.medusa.carts.createPaymentSessions(this.getCartId())
+            .then(({ cart }: { cart: any }) => {
+                console.log(cart.id);
+            })
     }
 
     checkCart() {
@@ -175,18 +189,18 @@ export class MedusaClientService {
         return this.http.post(`${environment.BACKEND_URL}/store/subscribe`, { email });
     }
 
-    updateProfile(first_name: string, last_name: string, email: string, phone: string,password: string = '') {
+    updateProfile(first_name: string, last_name: string, email: string, phone: string, password: string = '') {
         if (password == '') {
             return this.medusa.customers.update({ first_name, last_name, email, phone })
                 .then(({ customer }: { customer: any }) => {
                     this.#user.set(customer);
                 })
         }
-        else{
-        return this.medusa.customers.update({ first_name, last_name, email, password, phone })
-            .then(({ customer }: { customer: any }) => {
-                this.#user.set(customer);
-            })
+        else {
+            return this.medusa.customers.update({ first_name, last_name, email, password, phone })
+                .then(({ customer }: { customer: any }) => {
+                    this.#user.set(customer);
+                })
         }
     }
 
@@ -195,9 +209,46 @@ export class MedusaClientService {
             address: {
                 ...address,
             }
-          })
-          .then(({ customer }: {customer: any}) => {
-            this.#user.set(customer);
-          })
+        })
+            .then(({ customer }: { customer: any }) => {
+                this.#user.set(customer);
+            })
     }
+
+    updateAddress(addressId: any, address: any) {
+        return this.medusa.customers.addresses.updateAddress(addressId,{
+                ...address,
+        })
+            .then(({ customer }: { customer: any }) => {
+                this.#user.set(customer);
+            })
+    }
+
+    deleteAddress(addressId: any){
+        return this.medusa.customers.addresses.deleteAddress(addressId)
+        .then(({ customer }: { customer: any }) => {
+            this.#user.set(customer);
+        })
+    }
+
+    completeCart(cartId: string) {
+        return this.medusa.carts.complete(cartId)
+    }
+
+    deletePaymentSession(cartId: string) {
+        this.clearCart();
+        return this.medusa.carts.deletePaymentSession(cartId, "manual")
+            .then(({ cart }: { cart: any }) => {
+                console.log(cart.id);
+            })
+        }
+
+        retrieveOrder(orderId: string) {
+            return this.medusa.orders.retrieve(orderId);
+
+        }
+
+        calculateShippingCost(pincode: any, mode: string, grams: number) {
+            return this.http.post(`${environment.BACKEND_URL}/store/shipping`, { pincode, grams, mode });
+        }
 }

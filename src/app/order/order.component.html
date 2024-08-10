@@ -1,0 +1,107 @@
+<div class="content-container">
+        <div class="mx-auto max-w-2xl pt-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+          <div class="space-y-2 px-4 sm:flex sm:items-baseline sm:justify-between sm:space-y-0 sm:px-0">
+            <div class="flex sm:items-baseline sm:space-x-4">
+              <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Order #{{order.display_id}}</h1>
+              <a href="#" class="hidden text-sm font-medium text-green-800 hover:text-green-700 sm:block">
+                Download Invoice
+              </a>
+            </div>
+            <p class="text-sm text-gray-600">Order placed on <time class="font-semibold text-green-800">{{ order.created_at | date: 'dd' }}-{{ order.created_at | date: 'MM' }}-{{ order.created_at | date: 'yyyy' }}</time></p>
+            <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500 sm:hidden">
+              View invoice
+              <span aria-hidden="true"> &rarr;</span>
+            </a>
+          </div>
+
+          <!-- Products -->
+          <div class="mt-6">
+            <h2 class="sr-only">Products purchased</h2>
+
+            <div class="space-y-8">
+              <div class="border-b border-t border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border">
+               @for(items of order.items; track items.id){
+                <div class="px-4 py-6 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
+                  <div class="sm:flex lg:col-span-7">
+                    <div class="aspect-h-1 aspect-w-1 w-full flex-shrink-0 overflow-hidden rounded-lg sm:aspect-none sm:h-40 sm:w-40">
+                      <img [src]="items.thumbnail" class="h-full w-full object-cover object-center sm:h-full sm:w-full">
+                    </div>
+
+                    <div class="mt-6 sm:ml-6 sm:mt-0">
+                      <h3 class="text-base font-medium text-gray-900">
+                        <a href="#">{{items.title}}</a>
+                      </h3>
+
+                      <p class="mt-1 text-sm text-gray-500">Quantity: {{items.quantity}}</p>
+                      <p class="mt-1 text-sm text-gray-500">Size: {{items.description}}</p>
+                      <p class="mt-2 text-sm font-medium text-gray-900">₹{{(items.subtotal /
+                        100).toFixed(2)}}</p>
+                    </div>
+                  </div>
+                </div>
+            }
+                <div class="border-t border-gray-200 px-4 py-6 sm:px-6 lg:p-8">
+                  <h4 class="sr-only">Status</h4>
+                  <p class="text-sm font-medium text-gray-900">Your order is currently being processed.</p>
+                  <div class="mt-6" aria-hidden="true">
+                    <div class="overflow-hidden rounded-full bg-gray-200">
+                      <div class="h-2 rounded-full bg-indigo-600" style="width: calc((1 * 2 + 1) / 8 * 100%)"></div>
+                    </div>
+                    <div class="mt-6 hidden grid-cols-4 text-sm font-medium text-gray-600 sm:grid">
+                      <div class="text-indigo-600">Order placed</div>
+                      <div class="text-center text-indigo-600">Processing</div>
+                      <div class="text-center">Shipped</div>
+                      <div class="text-right">Delivered</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Billing -->
+          <div class="mt-16">
+            <h2 class="sr-only">Billing Summary</h2>
+
+            <div class="bg-gray-100 px-4 py-6 sm:rounded-lg sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:px-8 lg:py-8">
+              <dl class="grid grid-cols-2 gap-6 text-sm sm:grid-cols-2 md:gap-x-8 lg:col-span-7">
+                <div>
+                  <dt class="font-medium text-gray-900">Delivery & Billing address</dt>
+                  <dd class="mt-3 text-gray-500">
+                    <span class="block">{{order.shipping_address.first_name +  " " + order.shipping_address.last_name}} </span>
+                    <span class="block">{{order.shipping_address.address_1}}</span>
+                    <span class="block">{{order.shipping_address.address_2}}</span>
+                    <span class="block">{{order.shipping_address.city}},{{order.shipping_address.province}}</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt class="font-medium text-gray-900">Payment information</dt>
+                  <dd class="-ml-4 -mt-1 flex flex-wrap">
+                    <div class="ml-4 mt-4 flex-shrink-0">
+asdasdsada
+                    </div>
+                  </dd>
+                </div>
+              </dl>
+
+              <dl class="mt-8 divide-y divide-gray-200 text-sm lg:col-span-5 lg:mt-0">
+                <div class="flex items-center justify-between py-4">
+                  <dt class="text-gray-600">Shipping</dt>
+                  <dd class="font-medium text-gray-900">₹90</dd>
+                </div>
+                <div class="flex items-center justify-between py-4">
+                  <dt class="text-gray-600">Tax</dt>
+                  <dd class="font-medium text-gray-900">₹{{(order.tax_total /
+                    100).toFixed(2)}}</dd>
+                </div>
+                <div class="flex items-center justify-between pt-4">
+                  <dt class="font-medium text-gray-900">Order total</dt>
+                  <dd class="font-medium text-green-800">₹{{(order.subtotal /
+                    100).toFixed(2)}}</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+</div>

@@ -29,6 +29,7 @@ export class AccountComponent implements OnInit {
     successMessage: string = '';
     addresses: any[] = [];
     openAddressModal: boolean = false;
+    editAddressId: string = '';
 
     addressIsLoading: boolean = false;
     address_city: string = '';
@@ -42,17 +43,17 @@ export class AccountComponent implements OnInit {
     address_address1: string = '';
     address_address2: string = '';
     address_metadata: {} = {};
+    addressErrorMessage: string = '';
 
     constructor() {
         effect(() => {
             this.user = this.medusa.user;
-                if(this.user()) {
+            if (this.user()) {
                 this.lastName = this.user().last_name;
                 this.name = this.firstName + " " + this.lastName;
                 this.email = this.user().email;
                 this.phone = this.user().phone;
-            this.addresses = this.user().shipping_addresses;
-                    console.log(this.addresses);
+                this.addresses = this.user().shipping_addresses;
             }
         })
     }
@@ -90,25 +91,100 @@ export class AccountComponent implements OnInit {
             this.isLoading = false;
             return;
         }
-            this.medusa.updateProfile(this.firstName, this.lastName, this.email,this.phone,this.password).then((data: any) => {
-                this.isLoading = false;
-                this.successMessage = "Profile updated successfully";
-            });
+        this.medusa.updateProfile(this.firstName, this.lastName, this.email, this.phone, this.password).then((data: any) => {
+            this.isLoading = false;
+            this.successMessage = "Profile updated successfully";
+        });
     }
 
     updateAddress(): void {
+        this.addressErrorMessage = '';
+        if(this.address_city === ''||
+        this.address_phone === ''||
+        this.address_state === ''||
+        this.address_zipcode === ''||
+        this.address_firstName === ''||
+        this.address_lastName === ''||
+        this.address_company === ''||
+        this.address_address1 === ''
+     ){
+        this.addressErrorMessage = 'Please enter all the details.';
+        return;
+        }
+        if(this.address_phone.length < 10 || this.address_phone.length > 12){
+            this.addressErrorMessage = 'Please enter a valid phone number';
+            return;
+        }
+        this.openAddressModal = true;
+        if (this.editAddressId) {
+            this.medusa.updateAddress(this.editAddressId, {
+                first_name: this.address_firstName,
+                last_name: this.address_lastName,
+                address_2: this.address_address2,
+                address_1: this.address_address1,
+                city: this.address_city,
+                country_code: this.address_country,
+                postal_code: this.address_zipcode,
+                phone: this.address_phone,
+                company: this.address_company,
+                province: this.address_state,
+            }).then(() => {
+                this.openAddressModal = false;
+                this.addressIsLoading = false;
+                this.editAddressId = '';
+            })
+        }
+        else {
+            this.openAddressModal = false;
+            this.addressIsLoading = true;
+            this.medusa.addAddress({
+                first_name: this.address_firstName,
+                last_name: this.address_lastName,
+                address_1: this.address_address1,
+                address_2: this.address_address2,
+                city: this.address_city,
+                country_code: this.address_country,
+                postal_code: this.address_zipcode,
+                phone: this.address_phone,
+                company: this.address_company,
+                province: this.address_state,
+            }).then(() => {
+                this.addressIsLoading = false;
+            })
+        }
+    }
+
+    editAddress(address: any) {
+        this.editAddressId = address.id;
+        this.address_city = address.city;
+        this.address_phone = address.phone;
+        this.address_state = address.province;
+        this.address_zipcode = address.postal_code;
+        this.address_firstName = address.first_name;
+        this.address_lastName = address.last_name;
+        this.address_company = address.company;
+        this.address_address1 = address.address_1;
+        this.address_address2 = address.address_2;
+        this.openAddressModal = true;
+    }
+
+    addNewAddress(): void {
+        this.editAddressId ='';
+        this.address_city = '';
+        this.address_phone = '';
+        this.address_state = '';
+        this.address_zipcode = '';
+        this.address_firstName = '';
+        this.address_lastName = '';
+        this.address_company = '';
+        this.address_address1 = '';
+        this.address_address2 = '';
+        this.openAddressModal = true;
+    }
+
+    removeAddress(addressId: string): void {
         this.addressIsLoading = true;
-        this.medusa.addAddress({
-            first_name: this.address_firstName,
-            last_name: this.address_lastName,
-            address_1: this.address_address1,
-            city: this.address_city,
-            country_code: this.address_country,
-            postal_code: this.address_zipcode,
-            phone: this.address_phone,
-            company: this.address_company,
-            province: this.address_state,
-        }).then(() => {
+        this.medusa.deleteAddress(addressId).then(() => {
             this.addressIsLoading = false;
         })
     }
