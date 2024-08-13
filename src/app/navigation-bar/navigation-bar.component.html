@@ -301,6 +301,11 @@
                                     class="hover:text-ui-fg-base">Login</span>
                             </button>}
                             @else{
+                                <button
+                                class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800">
+                                <span routerLink="/account" (click)="closeMobileMenu()"
+                                    class="hover:text-ui-fg-base">Profile</span>
+                            </button>
                             <button
                                 class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800">
                                 <span routerLink="/login" (click)="logout();closeMobileMenu()"

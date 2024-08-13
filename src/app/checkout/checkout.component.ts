@@ -38,6 +38,7 @@ export class CheckoutComponent {
     shippingSelected: boolean = false;
     surfaceCost: number = 0;
     expressCost: number = 0;
+    couponCode: string = '';
 
     constructor(){
         effect(() => {

@@ -32,7 +32,6 @@ export class SignInComponent implements OnInit {
     }
 
     signIn(): void {
-        console.log(this.user());
         this.isLoading = true;
         this.errorMessage = '';
         this.medusa.login(

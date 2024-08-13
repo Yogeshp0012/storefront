@@ -48,9 +48,6 @@
                                 class="text-green-800 cursor-pointer font-semibold">{{product.collection.title}}</span>
                         </div>
                         <h2 class="text-3xl leading-10 font-medium">{{product.title}}</h2>
-                        <span class="text-lg font-normal text-gray-800">
-                            {{product.description}}
-                        </span>
                     </div>
                 </div>
                 <div class="mt-4 flex flex-col gap-y-4 lg:max-w-[500px] mx-auto">
@@ -146,6 +143,49 @@
                         }
 
                     </div>
+                    @if(product.metadata["styling-tips"]){
+                    <dl class="mt-10 grid grid-cols-1 gap-x-8 gap-y-10 text-sm sm:grid-cols-2">
+                        <div>
+                          <dt class="font-semibold text-md text-gray-900">Country of Origin</dt>
+                          <dd class="mt-2 text-gray-800">{{product.metadata.country}}</dd>
+                        </div>
+                        <div>
+                            <dt class="font-semibold text-gray-900">Pattern</dt>
+                            <dd class="mt-2 text-gray-800">{{product.metadata.pattern}}</dd>
+                          </div>
+                          <div>
+                            <dt class="font-semibold text-gray-900">Material</dt>
+                            <dd class="mt-2 text-gray-800">{{product.metadata.material}}</dd>
+                          </div>
+                          <div>
+                            <dt class="font-semibold text-gray-900">Fit</dt>
+                            <dd class="mt-2 text-gray-800">{{product.metadata.fit}}</dd>
+                          </div>
+                          <div>
+                            <dt class="font-semibold text-gray-900">Sleeves</dt>
+                            <dd class="mt-2 text-gray-800">{{product.metadata.sleeves}}</dd>
+                          </div>
+                          <div>
+                            <dt class="font-semibold text-gray-900">Bleeding Colours</dt>
+                            <dd class="mt-2 text-gray-800">{{product.metadata["bleeding-colors"]}}</dd>
+                          </div>
+                          <div>
+                            <dt class="font-semibold text-gray-900">Wash Care</dt>
+                            <dd class="mt-2 text-gray-800">{{product.metadata["wash-care"]}}</dd>
+                          </div>
+                          <div>
+                            <dt class="font-semibold text-gray-900">Ideal For</dt>
+                            <dd class="mt-2 text-gray-800">{{product.metadata.ideal}}</dd>
+                          </div>
+                      </dl>
+                      <h1 class="font-semibold text-md">Styling Tips</h1>
+                      @for(tip of tips; track tip){
+                        <p class="font-semibold text-sm">{{tip.name}}: <span class="font-normal">{{tip.value}}</span></p>
+                      }
+                    }
+                      <span class="text-md font-normal text-gray-800">
+                          <span class="font-semibold">Note</span>: {{product.description}}
+                      </span>
                 </div>
             </div>
         </div>

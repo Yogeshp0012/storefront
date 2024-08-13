@@ -255,6 +255,17 @@
                             <dd class="text-sm font-medium text-gray-900">₹{{(cart().tax_total /
                                 100).toFixed(2)}}</dd>
                         </div>
+                        <div class="flex items-center w-full">
+                            <label for="couponCode" class="block w-32 text-sm font-medium leading-6 text-gray-900">Coupon Code</label>
+                            <div class="w-full ml-4">
+                                <input [(ngModel)]="couponCode" name="couponCode" type="text"
+                                    class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none sm:text-sm sm:leading-6">
+                            </div>
+                            <div class="ml-2">
+                                <button type="button"
+                                    class="w-full rounded-md border border-transparent bg-green-800 px-2 py-2 text-base font-medium text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800">Apply</button>
+                            </div>
+                        </div>
                         <div class="flex items-center justify-between border-t border-gray-200 pt-6">
                             <dt class="text-base font-medium">Total</dt>
                             <dd class="text-base font-medium text-gray-900">₹{{(cart().subtotal /
