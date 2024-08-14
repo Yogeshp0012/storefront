@@ -135,6 +135,15 @@ export class MedusaClientService {
             })
     }
 
+
+    refreshPaymentSession(cartId: string) {
+        return this.medusa.carts.deletePaymentSession(cartId, "manual")
+        .then(({ cart }: {cart: any}) => {
+          console.log(cart.id);
+        })
+    }
+
+
     checkCart() {
         const id = this.getCartId();
         if (id) {
@@ -236,10 +245,9 @@ export class MedusaClientService {
     }
 
     deletePaymentSession(cartId: string) {
-        this.clearCart();
         return this.medusa.carts.deletePaymentSession(cartId, "manual")
             .then(({ cart }: { cart: any }) => {
-                console.log(cart.id);
+                this.clearCart();
             })
         }
 
@@ -250,5 +258,18 @@ export class MedusaClientService {
 
         calculateShippingCost(pincode: any, mode: string, grams: number) {
             return this.http.post(`${environment.BACKEND_URL}/store/shipping`, { pincode, grams, mode });
+        }
+
+        lookupOrder(orderId: string){
+            return this.medusa.orders.retrieve(orderId);
+        }
+
+        addShippingMethod(cartId: any, shippingCost: any){
+            return this.medusa.carts.addShippingMethod(cartId, {
+                option_id: "so_01J55T375F9FGCCJKYZDS4PMYM",
+                data: {
+                    shipping_cost: shippingCost
+                }
+              });
         }
 }

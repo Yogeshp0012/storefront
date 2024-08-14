@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MedusaClientService } from './medusa-client.service';
 
@@ -19,47 +19,48 @@ export class RazorpayService {
         return this.http.post(`${environment.BACKEND_URL}/store/createOrder`, {});
     }
 
-    payNow(orderId: string) {
+    payNow(orderId: string, orderAmount: Number, customerName: string, customerEmail: string, customerPhone: string): Promise<any> {
         this.medusa.createPaymentSession();
         let that = this;
-        const options = {
+        return new Promise((resolve, reject) => {
+          const options = {
             key: 'rzp_test_KEIgI2f7IkBcGx', // Replace with your Razorpay key_id
-            amount: '50000', // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            amount: orderAmount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
             currency: 'INR',
-            name: 'Acme Corp',
-            description: 'Test Transaction',
+            name: 'Vastragrah',
+            description: 'Transaction for order orderId',
             order_id: orderId,
             prefill: {
-                name: 'Gaurav Kumar',
-                email: 'gaurav.kumar@example.com',
-                contact: '9999999999'
+              name: customerName,
+              email: customerEmail,
+              contact: customerPhone
             },
             "handler": function (response: any) {
-                that.http.post(`${environment.BACKEND_URL}/store/validateOrder`, {
-                    ...response
-                }).subscribe((data: any) => {
-                    let cartId = that.medusa.getCartId() as string
-                    that.medusa.completeCart(cartId).then(({ data, type }: { data: any, type: any }) => {
-                        that.medusa.deletePaymentSession(cartId).then(() => {
-                            that.router.navigate(['/orders/' + data.id]);
-                        });
-                    })
+              that.http.post(`${environment.BACKEND_URL}/store/validateOrder`, {
+                ...response
+              }).subscribe((data: any) => {
+                let cartId = that.medusa.getCartId() as string;
+                that.medusa.completeCart(cartId).then(({ data, type }: { data: any, type: any }) => {
+                  that.medusa.deletePaymentSession(cartId).then(() => {
+                    resolve(data); // Resolve the promise with the data
+                  });
                 });
+              });
+            },
+            "modal": {
+                "ondismiss": function () {
+                    reject('Payment cancelled'); // Reject the promise with the error
+                }
             },
             theme: {
-                color: '#F37254'
+              color: '#166534'
             },
-        };
-        const rzp = new window.Razorpay(options);
-        rzp.on('payment.failed', function (response: any) {
-            console.log(response.error.code);
-            console.log(response.error.description);
-            console.log(response.error.source);
-            console.log(response.error.step);
-            console.log(response.error.reason);
-            console.log(response.error.metadata.order_id);
-            console.log(response.error.metadata.payment_id);
+          };
+          const rzp = new window.Razorpay(options);
+          rzp.on('payment.failed', function (response: any) {
+            reject(response.error); // Reject the promise with the error
+          });
+          rzp.open();
         });
-        rzp.open();
-    }
+      }
 }

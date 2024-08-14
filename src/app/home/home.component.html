@@ -1,15 +1,15 @@
 <div class="content-container">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="cursor-pointer relative h-full image-container">
-            <img alt="vastragrah" class="w-full h-full object-cover" src="/assets/images/women.webp" alt="Women" />
+        <div routerLink="/store/all" class="cursor-pointer relative h-full image-container">
+            <img alt="vastragrah" class="w-full h-full object-contain" src="/assets/images/female.webp" alt="Women" />
             <div class="absolute inset-0 flex flex-col items-center justify-center">
-                <h2 class="sm:text-[110px] font-bold text-[50px] color-white text-white">Womens</h2>
+                <h2 class="sm:text-[110px] font-bold text-[50px] color-white text-white">Women</h2>
             </div>
         </div>
         <div class="cursor-pointer relative h-full image-container">
-            <img class="w-full h-full object-cover" src="/assets/images/men.webp" alt="Men" />
+            <img class="w-full h-full object-contain" src="/assets/images/male.webp" alt="Men" />
             <div class="absolute inset-0 flex flex-col items-center justify-center">
-                <h2 class="sm:text-[110px] font-bold text-[50px] color-white text-white">Mens</h2>
+                <h2 class="sm:text-[110px] font-bold text-[50px] color-white text-white">Men</h2>
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
             @else{
             @for(arrival of newArrivals; track arrival.id){
             <div [routerLink]="['/product', arrival.handle]" class="group relative">
-                <img  class="cursor-pointer min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 lg:aspect-none group-hover:opacity-90 lg:h-80 transition duration-300 ease-in-out transform group-hover:scale-105"
+                <img class="cursor-pointer min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 lg:aspect-none group-hover:opacity-90 lg:h-80 transition duration-300 ease-in-out transform group-hover:scale-105"
                     [src]="arrival.thumbnail" alt="Product Image" />
                 <div class="mt-4 flex flex-col justify-between">
                     <div>
@@ -105,7 +105,7 @@
             <button [routerLink]="['/store', collection.handle]"
                 class="rounded-sm bg-green-800 px-6 py-3 text-md font-semibold text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800">
                 See All Products
-        </button>
+            </button>
         </div>
     </div>
 </div>

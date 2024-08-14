@@ -38,7 +38,7 @@ export class NavigationBarComponent implements OnInit {
             this.user = this.medusa.user;
             this.cart = this.medusa.cart;
             if(this.cart()){
-                this.tax = this.cart().subtotal * 0.05;
+                this.tax = (this.cart().subtotal * 0.05) / (1+0.05);
             }
         })
     }

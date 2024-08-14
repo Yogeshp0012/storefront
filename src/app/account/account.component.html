@@ -106,9 +106,13 @@
                                         /
                                         Province</label>
                                     <div class="mt-2">
-                                        <input [(ngModel)]="address_state" type="text" name="address_state"
-                                            id="address_state"
-                                            class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none sm:text-sm sm:leading-6">
+                                        <select [(ngModel)]="address_state" name="address_state" id="address_state"
+                                            class="block appearance-none w-full bg-white border border-green-800 text-green-800 py-2 px-2 rounded leading-tight focus:outline-none text-sm"
+                                            id="grid-state">
+                                            @for(state of stateList; track state){
+                                            <option [value]="state">{{ state }}</option>
+                                            }
+                                        </select>
                                     </div>
                                 </div>
 
@@ -124,7 +128,7 @@
                                 </div>
                             </div>
                             @if(addressErrorMessage){
-                                <p class="mt-3 text-red-800">{{addressErrorMessage}}</p>
+                            <p class="mt-3 text-red-800">{{addressErrorMessage}}</p>
                             }
                         </div>
                         <div class="mt-6 flex items-center justify-end gap-x-6">
@@ -162,7 +166,7 @@
             <div class="md:col-span-2 font-semibold text-2xl">
                 <div class="sm:block md:hidden mb-4">
                     <div class="relative">
-                        <select [(ngModel)]="selectedStep"
+                        <select [(ngModel)]="selectedStep" name="selectedStep" id="selectedStep"
                             class="block appearance-none w-full bg-white border border-green-800 text-green-800 py-2 px-2 rounded leading-tight focus:outline-none text-sm"
                             id="grid-state">
                             <option value="1">Profile</option>
@@ -277,6 +281,67 @@
                     </div>
                 </div>
                 }
+                @if(selectedStep === '3'){
+                <div class="bg-white">
+                    <div class="max-w-xl">
+                        <h1 class="text-2xl font-bold tracking-tight text-green-800">Order history</h1>
+                    </div>
+
+                    <div class="mt-6 flow-root sm:mt-8">
+                        <div class="divide-y divide-gray-200">
+                            @for(order of orders; track order.id){
+                            <div class="flex flex-wrap items-center gap-y-4 py-6">
+                                <dl class="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
+                                    <dt class="text-base font-medium text-gray-800">Order ID</dt>
+                                    <dd class="mt-1.5 text-base font-semibold text-gray-900">
+                                        <span class="text-green-800 text-sm">{{order.id | slice:-8}}</span>
+                                    </dd>
+                                </dl>
+
+                                <dl class="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
+                                    <dt class="text-base font-medium text-gray-800">Date</dt>
+                                    <dd class="mt-1.5 text-base font-semibold text-gray-900 dark:text-white"><time
+                                            class="font-semibold text-green-800">{{ order.created_at | date: 'dd' }}-{{
+                                            order.created_at | date: 'MM' }}-{{ order.created_at | date: 'yyyy'
+                                            }}</time>
+                                    </dd>
+                                </dl>
+
+                                <dl class="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
+                                    <dt class="text-base font-medium text-gray-800">Products</dt>
+                                    <dd class="mt-1.5 text-base font-semibold text-gray-900">{{order.items.length}}</dd>
+                                </dl>
+
+                                <dl class="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
+                                    <dt class="text-base font-medium text-gray-800">Status</dt>
+                                    @if(order.status === "pending"){
+                                    <dd
+                                        class="me-2 mt-1.5 inline-flex items-center rounded bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                                        <svg class="me-1 h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                            width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M18.5 4h-13m13 16h-13M8 20v-3.333a2 2 0 0 1 .4-1.2L10 12.6a1 1 0 0 0 0-1.2L8.4 8.533a2 2 0 0 1-.4-1.2V4h8v3.333a2 2 0 0 1-.4 1.2L13.957 11.4a1 1 0 0 0 0 1.2l1.643 2.867a2 2 0 0 1 .4 1.2V20H8Z" />
+                                        </svg>
+                                        Processing
+                                    </dd>
+                                    }
+                                </dl>
+
+                                <div
+                                    class="w-full grid sm:grid-cols-2 lg:flex lg:w-64 lg:items-center lg:justify-end gap-4">
+                                    <button type="button" [routerLink]="['/order', order.id]"
+                                        class="inline-flex justify-center text-sm rounded-sm bg-green-800 px-3 py-3 text-md font-semibold text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800">
+                                        View Invoice
+                                    </button>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+                }
                 @if(selectedStep === '2'){
                 <div>
                     Hello, {{name}}
@@ -341,13 +406,12 @@
                     </div>
 
                     }
-                    @if(addresses.length < 3){
-                    <button type="button" (click)="addNewAddress();"
+                    @if(addresses.length < 3){ <button type="button" (click)="addNewAddress();"
                         class="mt-6 w-full max-w-md text-sm rounded-sm bg-green-800 px-3 py-3 text-md font-semibold text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800">
                         Add New Address
-                    </button>
-                }
-                    }
+                        </button>
+                        }
+                        }
                 </div>
             </div>
             }

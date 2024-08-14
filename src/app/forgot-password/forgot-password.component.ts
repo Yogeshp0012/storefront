@@ -52,6 +52,9 @@ export class ForgotPasswordComponent {
         this.isLoading = false;
       }
     });
+    this.errorMessage = '';
+    this.emailVerified = true;
+    this.isLoading = false;
   }
 
   resetPassword() {
@@ -59,7 +62,7 @@ export class ForgotPasswordComponent {
     this.successMessage = false;
     this.isLoading = true;
     if (this.password == '' || this.code == '') {
-        this.errorMessage === 'Please enter all details';
+        this.errorMessage = 'Please enter all details';
         this.isLoading = false;
         return;
       }

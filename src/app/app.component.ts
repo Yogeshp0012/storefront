@@ -21,8 +21,9 @@ export class AppComponent implements OnInit {
 
     ngOnInit(): void {
         injectSpeedInsights();
-        this.medusa.checkUserLoggedIn();
-        this.medusa.checkCart();
+        this.medusa.checkUserLoggedIn().then(() => {
+            this.medusa.checkCart();
+        });
         this.router.events.subscribe(event => {
             if (event instanceof NavigationEnd) {
                 this.renderer.setProperty(this.document.documentElement, 'scrollTop', 0);

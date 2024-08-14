@@ -1,6 +1,6 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
 import { MedusaClientService } from '../medusa-client.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Utils } from '../utils/Utils';
@@ -8,7 +8,7 @@ import { Utils } from '../utils/Utils';
 @Component({
     selector: 'app-account',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule],
+    imports: [CommonModule, FormsModule, RouterModule, DatePipe],
     templateUrl: './account.component.html',
     styleUrl: './account.component.scss'
 })
@@ -34,7 +34,7 @@ export class AccountComponent implements OnInit {
     addressIsLoading: boolean = false;
     address_city: string = '';
     address_country: string = 'IN';
-    address_state: string = '';
+    address_state: string = 'Karnataka';
     address_zipcode: string = '';
     address_firstName: string = '';
     address_lastName: string = '';
@@ -45,6 +45,47 @@ export class AccountComponent implements OnInit {
     address_metadata: {} = {};
     addressErrorMessage: string = '';
 
+    orders: any[] = [];
+
+    stateList: string[] = [
+        "Andaman and Nicobar Islands",
+        "Andhra Pradesh",
+        "Arunachal Pradesh",
+        "Assam",
+        "Bihar",
+        "Chandigarh",
+        "Chhattisgarh",
+        "Dadra and Nagar Haveli and Daman and Diu",
+        "Goa",
+        "Gujarat",
+        "Haryana",
+        "Himachal Pradesh",
+        "Jammu and Kashmir",
+        "Jharkhand",
+        "Karnataka",
+        "Kerala",
+        "Ladakh",
+        "Lakshadweep",
+        "Madhya Pradesh",
+        "Maharashtra",
+        "Manipur",
+        "Meghalaya",
+        "Mizoram",
+        "Nagaland",
+        "NCT of Delhi",
+        "Odisha",
+        "Puducherry",
+        "Punjab",
+        "Rajasthan",
+        "Sikkim",
+        "Tamil Nadu",
+        "Telangana",
+        "Tripura",
+        "Uttarakhand",
+        "Uttar Pradesh",
+        "West Bengal"
+    ];
+
     constructor() {
         effect(() => {
             this.user = this.medusa.user;
@@ -54,6 +95,8 @@ export class AccountComponent implements OnInit {
                 this.email = this.user().email;
                 this.phone = this.user().phone;
                 this.addresses = this.user().shipping_addresses;
+                this.orders = this.medusa.user().orders;
+                console.log(this.orders);
             }
         })
     }
@@ -172,7 +215,7 @@ export class AccountComponent implements OnInit {
         this.editAddressId ='';
         this.address_city = '';
         this.address_phone = '';
-        this.address_state = '';
+        this.address_state = 'Karnataka';
         this.address_zipcode = '';
         this.address_firstName = '';
         this.address_lastName = '';

@@ -1,34 +1,58 @@
+@if(paymentProcessing){
+<div class="bg-white fixed inset-0 flex items-center justify-center z-50">
+    <div class="text-center">
+        <h2 class="text-2xl font-semibold text-gray-900">Payment is Processing</h2>
+        <p class="mt-2 text-lg text-gray-800">Please do not refresh the page.</p>
+        <div class="mt-4">
+            <svg class="animate-spin h-10 w-10 text-green-800 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0116 0H4z"></path>
+            </svg>
+        </div>
+    </div>
+</div>
+}
+@else{
 <div class="bg-white content-container">
     <div class="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 class="sr-only">Checkout</h2>
-
+        @if(pageLoading){
+        <div class="skeleton-container px-2">
+            <div class="skeleton skeleton-box"></div>
+            <div class="skeleton skeleton-title mt-2"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text"></div>
+        </div>
+        }
+        @else{
         <form class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
             <div>
                 <h2 class="text-lg font-medium text-gray-900">Shipping information</h2>
 
                 @if(user() && user().shipping_addresses.length > 0){
-                    @for(address of user().shipping_addresses; track address.id){
-                        <div class="w-full mt-4">
-                            <ul class="space-y-4 cursor-pointer">
-                                <li class="p-4 border shadow flex justify-between items-center">
-                                    <div>
-                                        <h3 class="font-normal text-sm">{{ address.first_name + " " + address.last_name
-                                            }}</h3>
-                                        <p class="font-normal text-sm">{{ address.company }}, {{ address.address_1 }},
-                                            {{ address.address_2 ? address.address_2 + "," : "" }} {{ address.city }},
-                                            {{ address.province }}</p>
-                                        <p class="font-normal text-sm text-green-800">{{ address.phone }}</p>
-                                    </div>
-                                    <div class="flex items-center space-x-2">
-                                        <button (click)="selectAddress(address)"
-                                            class="text-green-700 hover:text-green-800 focus:outline-none">
-                                            Select
-                                        </button>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        }
+                @for(address of user().shipping_addresses; track address.id){
+                <div class="w-full mt-4">
+                    <ul class="space-y-4 cursor-pointer">
+                        <li class="p-4 border shadow flex justify-between items-center">
+                            <div>
+                                <h3 class="font-normal text-sm">{{ address.first_name + " " + address.last_name
+                                    }}</h3>
+                                <p class="font-normal text-sm">{{ address.company }}, {{ address.address_1 }},
+                                    {{ address.address_2 ? address.address_2 + "," : "" }} {{ address.city }},
+                                    {{ address.province }}</p>
+                                <p class="font-normal text-sm text-green-800">{{ address.phone }}</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button (click)="selectAddress(address)"
+                                    class="text-green-700 hover:text-green-800 focus:outline-none">
+                                    Select
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                }
                 }
 
                 <div class="mt-8 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
@@ -37,7 +61,6 @@
                             name</label>
                         <div class="mt-2">
                             <input [(ngModel)]="address_firstName" name="address_firstName" type="text"
-
                                 class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none sm:text-sm sm:leading-6">
                         </div>
                     </div>
@@ -70,7 +93,17 @@
                                 class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none sm:text-sm sm:leading-6">
                         </div>
                     </div>
-
+                    @if(!this.user()){
+                    <div class="col-span-full">
+                        <label for="guestEmail" class="block text-sm font-medium leading-6 text-gray-900">Email
+                            address</label>
+                        <div class="mt-2">
+                            <input [(ngModel)]="guestEmail" id="guestEmail" name="guestEmail" type="email"
+                                autocomplete="email"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none px-2 sm:text-sm sm:leading-6">
+                        </div>
+                    </div>
+                    }
                     <div class="col-span-full">
                         <label for="address_address1" class="block text-sm font-medium leading-6 text-gray-900">Address
                             Line 1</label>
@@ -82,7 +115,7 @@
                     </div>
                     <div class="col-span-full">
                         <label for="address_address2" class="block text-sm font-medium leading-6 text-gray-900">Address
-                            Line 2</label>
+                            Line 2 (Optional)</label>
                         <div class="mt-2">
                             <input [(ngModel)]="address_address2" id="address_address2" name="address_address2"
                                 type="text" autocomplete="email"
@@ -103,8 +136,13 @@
                             /
                             Province</label>
                         <div class="mt-2">
-                            <input [(ngModel)]="address_state" type="text" name="address_state" id="address_state"
-                                class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none sm:text-sm sm:leading-6">
+                            <select [(ngModel)]="address_state" name="address_state" id="address_state"
+                                class="block appearance-none w-full bg-white border border-gray-300 text-gray-900  py-2 px-2 rounded leading-tight focus:outline-none text-sm"
+                                id="grid-state">
+                                @for(state of stateList; track state){
+                                <option [value]="state">{{ state }}</option>
+                                }
+                            </select>
                         </div>
                     </div>
 
@@ -112,36 +150,29 @@
                         <label for="address_zipcode" class="block text-sm font-medium leading-6 text-gray-900">ZIP /
                             Postal code</label>
                         <div class="mt-2">
-                            <input [(ngModel)]="address_zipcode" type="text" name="address_zipcode" id="address_zipcode"
+                            <input (ngModelChange)="onZipcodeChange($event)" [(ngModel)]="address_zipcode" type="text"
+                                name="address_zipcode" id="address_zipcode"
                                 class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none sm:text-sm sm:leading-6">
                         </div>
                     </div>
 
                     <div class="col-span-1">
-                        <label for="country"
-                            class="block text-sm font-medium leading-6 text-gray-900">Country</label>
+                        <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Country</label>
                         <div class="mt-2">
-                            <input value="India" disabled id="country" name="country" type="text"
-                                autocomplete="email"
+                            <input value="India" disabled id="country" name="country" type="text" autocomplete="email"
                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none px-2 sm:text-sm sm:leading-6">
                         </div>
                     </div>
                     @if(addressErrorMessage){
-                        <p class="text-red-800">{{addressErrorMessage}}</p>
+                    <p class="text-red-800">{{addressErrorMessage}}</p>
                     }
                 </div>
-                <button type="button" (click)="calculateShippingCost()"
-                class="mt-4 w-full rounded-md border border-transparent bg-green-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800">Calculate Shipping Cost</button>
                 @if(shippingCostCalculated){
                 <div class="mt-10 border-t border-gray-200 pt-10">
                     <fieldset>
                         <legend class="text-lg font-medium text-gray-900">Delivery method</legend>
 
-                        <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                            <!--
-                  Checked: "border-transparent", Not Checked: "border-gray-300"
-                  Active: "ring-2 ring-indigo-500"
-                -->
+                        <div class="mt-4 grid grid-cols-1 ">
                             <label
                                 class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none">
                                 <input type="radio" name="delivery-method" value="Standard" class="sr-only"
@@ -152,70 +183,31 @@
                                         <span id="delivery-method-0-label"
                                             class="block text-sm font-medium text-gray-900">Standard</span>
                                         <span id="delivery-method-0-description-0"
-                                            class="mt-1 flex items-center text-sm text-gray-500">4–10 business
+                                            class="mt-1 flex items-center text-sm text-gray-500">4–8 business
                                             days</span>
                                         <span id="delivery-method-0-description-1"
                                             class="mt-6 text-sm font-medium text-gray-900">₹{{surfaceCost}}</span>
                                     </span>
                                 </span>
-                                <!-- Not Checked: "hidden" -->
-                                <svg class="h-5 w-5 text-indigo-600" viewBox="0 0 20 20" fill="currentColor"
+                                <svg class="h-5 w-5 text-green-800" viewBox="0 0 20 20" fill="currentColor"
                                     aria-hidden="true">
                                     <path fill-rule="evenodd"
                                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
                                         clip-rule="evenodd" />
                                 </svg>
-                                <!--
-                    Active: "border", Not Active: "border-2"
-                    Checked: "border-indigo-500", Not Checked: "border-transparent"
-                  -->
-                                <span class="pointer-events-none absolute -inset-px rounded-lg border-2"
-                                    aria-hidden="true"></span>
-                            </label>
-                            <!--
-                  Checked: "border-transparent", Not Checked: "border-gray-300"
-                  Active: "ring-2 ring-indigo-500"
-                -->
-                            <label
-                                class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none">
-                                <input type="radio" name="delivery-method" value="Express" class="sr-only"
-                                    aria-labelledby="delivery-method-1-label"
-                                    aria-describedby="delivery-method-1-description-0 delivery-method-1-description-1">
-                                <span class="flex flex-1">
-                                    <span class="flex flex-col">
-                                        <span id="delivery-method-1-label"
-                                            class="block text-sm font-medium text-gray-900">Express</span>
-                                        <span id="delivery-method-1-description-0"
-                                            class="mt-1 flex items-center text-sm text-gray-500">2–5 business
-                                            days</span>
-                                        <span id="delivery-method-1-description-1"
-                                            class="mt-6 text-sm font-medium text-gray-900">₹{{expressCost}}</span>
-                                    </span>
-                                </span>
-                                <!-- Not Checked: "hidden" -->
-                                <svg class="h-5 w-5 text-indigo-600" viewBox="0 0 20 20" fill="currentColor"
-                                    aria-hidden="true">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <!--
-                    Active: "border", Not Active: "border-2"
-                    Checked: "border-indigo-500", Not Checked: "border-transparent"
-                  -->
                                 <span class="pointer-events-none absolute -inset-px rounded-lg border-2"
                                     aria-hidden="true"></span>
                             </label>
                         </div>
                     </fieldset>
                 </div>
-            }
+                }
             </div>
 
 
             <div class="mt-10 lg:mt-0">
                 <h2 class="text-lg font-medium text-green-800">Order summary</h2>
-
+                @if(cart() && cart().items){
                 <div class="mt-4 rounded-lg border border-gray-200 bg-white shadow-sm">
                     <h3 class="sr-only">Items in your cart</h3>
                     <ul role="list" class="divide-y divide-gray-200">
@@ -252,34 +244,45 @@
                         </div>
                         <div class="flex items-center justify-between">
                             <dt class="text-sm">Inclusive of Tax</dt>
-                            <dd class="text-sm font-medium text-gray-900">₹{{(cart().tax_total /
-                                100).toFixed(2)}}</dd>
+                            <dd class="text-sm font-medium text-gray-900">₹{{(tax/100).toFixed(2)}}</dd>
                         </div>
+                        @if(!couponCodeValid){
                         <div class="flex items-center w-full">
-                            <label for="couponCode" class="block w-32 text-sm font-medium leading-6 text-gray-900">Coupon Code</label>
+                            <label for="couponCode"
+                                class="block w-32 text-sm font-medium leading-6 text-gray-900">Coupon Code</label>
                             <div class="w-full ml-4">
                                 <input [(ngModel)]="couponCode" name="couponCode" type="text"
                                     class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-800 outline-none sm:text-sm sm:leading-6">
                             </div>
+
                             <div class="ml-2">
-                                <button type="button"
+                                <button type="button" (click)="applyCouponCode()"
                                     class="w-full rounded-md border border-transparent bg-green-800 px-2 py-2 text-base font-medium text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800">Apply</button>
                             </div>
                         </div>
+                        @if(couponCodeInvalid){
+                        <p class="text-red-800">Coupon code is not valid.</p>
+                        }
+                        }
+                        @if(couponCodeValid){
+                        <p class="text-green-800">{{couponCode}} Coupon applied.</p>
+                        }
                         <div class="flex items-center justify-between border-t border-gray-200 pt-6">
                             <dt class="text-base font-medium">Total</dt>
-                            <dd class="text-base font-medium text-gray-900">₹{{(cart().subtotal /
-                                100).toFixed(2)}}</dd>
+                            <dd class="text-base font-medium text-gray-900">₹{{totalPrice.toFixed(2)}}</dd>
                         </div>
                     </dl>
 
                     <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
-                        <button type="button" (click)="makePayment()"
-                            class="w-full rounded-md border border-transparent bg-green-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800">Confirm
+                        <button type="button" (click)="makePayment()" [disabled]="disableButton"
+                            class="w-full rounded-md border border-transparent bg-green-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800 disabled:cursor-not-allowed">Confirm
                             order</button>
                     </div>
                 </div>
+                }
             </div>
         </form>
+        }
     </div>
 </div>
+}
