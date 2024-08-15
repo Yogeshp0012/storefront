@@ -1,23 +1,83 @@
 <div class="content-container">
+    @if(cancelOrderPopup){
+    <div id="popup-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="relative p-4 w-full max-w-md bg-white rounded-lg shadow">
+            <button type="button"
+                class="absolute top-3 right-3 text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg p-1"
+                (click)="cancelOrderPopup=false;">
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M1 1l6 6m0 0l6 6M7 7l6-6M7 7l-6 6" />
+                </svg>
+            </button>
+            <div class="p-4 text-center">
+                <h3 class="text-lg text-green-800 font-medium">Cancel Order</h3>
+                <p class="mt-2 text-md text-gray-800">Cancellation is subject to the following requirements being met:
+                </p>
+                <ul class="mt-2 text-left text-sm text-gray-800 px-2">
+                    <li class="mt-2">1. Cancellation is not possible once the order has been packed.</li>
+                    <li class="mt-2">2. Please send an email to <a href="mailto:support@vastragrah.co"
+                            class="text-blue-600">support&#64;vastragrah.co</a>, specifying your Order ID and
+                        the reason for your cancellation request.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    }
+    @if(exchangeOrderPopup){
+    <div id="popup-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="relative p-4 w-full max-w-md bg-white rounded-lg shadow">
+            <button type="button"
+                class="absolute top-3 right-3 text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg p-1"
+                (click)="exchangeOrderPopup=false;">
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M1 1l6 6m0 0l6 6M7 7l6-6M7 7l-6 6" />
+                </svg>
+            </button>
+            <div class="p-4 text-center">
+                <h3 class="text-lg text-green-800 font-medium">Exchange Order</h3>
+                <p class="mt-2 text-md text-gray-800">Exchange is subject to the following requirements being met:</p>
+                <ul class="mt-2 text-left text-sm text-gray-800 px-2">
+                    <li class="mt-2">1. Exchanges must be initiated within 24 hours of receiving your order.</li>
+                    <li class="mt-2">2. Please send an email to <a href="mailto:support@vastragrah.co"
+                            class="text-blue-600">support&#64;vastragrah.co</a> with your Order ID and the details of
+                        your exchange request including product images, product labels and reason for exchange.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    }
+    @if(order){
     <div class="mx-auto max-w-2xl pt-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <div class="space-y-2 px-4 sm:flex sm:items-baseline sm:justify-between sm:space-y-0 sm:px-0">
             <div class="flex sm:items-baseline sm:space-x-4">
-                <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Order #{{order.display_id}}</h1>
-                <a href="#" class="hidden text-sm font-medium text-green-800 hover:text-green-700 sm:block">
-                    Tracking ID: 12321312312
+                <h1 class="text-xl font-bold tracking-tight text-gray-900 ">Order #{{order.id | slice:-8}}
+                </h1>
+                @if(statusCode !== -1){
+                <a href="https://www.delhivery.com/tracking" target="_blank"
+                    class="text-sm font-medium text-green-800 hover:text-green-700 sm:block">
+                    Delhivery ID: {{
+                    order.fulfillment_status !== "shipped" ? "Yet to be shipped" :
+                    order.fulfillments[0].tracking_links[0].tracking_number
+                    }}
                 </a>
+                }
             </div>
-            <div class="flex items-center gap-x-3">
-                <button class="text-red-900 bg-white border px-2 py-2 border-red-800 focus:outline-none">
-                    Cancel
+            <div class="flex  items-center gap-x-3">
+                @if(statusCode === 2){
+                <button (click)="cancelOrderPopup=true;" class="text-red-900 bg-white px-2 py-2 focus:outline-none">
+                    Cancel Order
                 </button>
+                }
+                @if(statusCode === 5){
+                <button (click)="exchangeOrderPopup=true;" class="text-green-900 bg-white px-2 py-2 focus:outline-none">
+                    Exchange Order
+                </button>
+                }
                 <p class="text-sm text-gray-600">Order placed on <time class="font-semibold text-green-800">{{
                         order.created_at | date: 'dd' }}-{{ order.created_at | date: 'MM' }}-{{ order.created_at | date:
                         'yyyy' }}</time></p>
-                <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500 sm:hidden">
-                    View invoice
-                    <span aria-hidden="true"> &rarr;</span>
-                </a>
             </div>
         </div>
 
@@ -51,26 +111,58 @@
                     }
                     <div class="border-t border-gray-200 px-4 py-6 sm:px-6 lg:p-8">
                         <h4 class="sr-only">Status</h4>
+                        @if(statusCode === -1){
+                        <p class="text-sm font-medium text-red-800">Your order has been canceled. You will receive a
+                            refund of ₹{{totalPrice.toFixed(2)}}, which will be reflected in your account within 5-7
+                            days.</p>
+                        }
+                        @if(statusCode === 2){
                         <p class="text-sm font-medium text-gray-900">Your order is currently being processed. </p>
+                        }
+                        @if(statusCode === 3){
+                        <p class="text-sm font-medium text-gray-900">Your order is packed. </p>
+                        }
+                        @if(statusCode === 4){
+                        <p class="text-sm font-medium text-gray-900">Your order has been shipped. </p>
+                        }
+                        @if(statusCode === 5){
+                        <p class="text-sm font-medium text-gray-900">Your order has been delivered. </p>
+                        }
+                        @if(statusCode !== 5 && statusCode !== -1){
+                        <p class="text-sm text-gray-600">Your package is expected to be delivered by <time
+                                class="font-semibold text-green-800">{{
+                                delivery | date: 'dd' }}-{{ delivery | date: 'MM' }}-{{ delivery
+                                | date:
+                                'yyyy' }}</time></p>
+                        }
+                        @if(statusCode !== -1){
                         <div class="mt-6" aria-hidden="true">
                             <div class="overflow-hidden rounded-full bg-gray-200">
-                                <div class="h-2 rounded-full bg-green-800" style="width: calc((1 * 2 + 1) / 8 * 100%)">
-                                </div>
+                                <div class="h-2 rounded-full bg-green-800" [style.width]="calculateWidth()"></div>
                             </div>
-                            <div class="mt-6 hidden grid-cols-4 text-sm font-medium text-green-800 sm:grid">
-                                <div class="text-green-800">Manifested</div>
-                                <div class="text-center text-green-800">Processing</div>
-                                <div class="text-center">Shipped</div>
-                                <div class="text-right">Delivered</div>
+
+                            <div class="mt-6 hidden md:grid grid-cols-5 text-sm font-medium text-green-800">
+                                <div [ngClass]="{'text-green-800': statusCode > 2}">Manifested</div>
+                                <div class="text-center" [ngClass]="{'text-green-800': statusCode>= 2}">Processing
+                                </div>
+                                <div class="text-center"
+                                    [ngClass]="{'text-green-800': statusCode >= 3, 'text-gray-800': statusCode < 3}">
+                                    Packed</div>
+                                <div class="text-center"
+                                    [ngClass]="{'text-green-800': statusCode >= 4, 'text-gray-800': statusCode < 4}">
+                                    Shipped</div>
+                                <div [ngClass]="{'text-green-800': statusCode === 5, 'text-gray-800': statusCode < 5}"
+                                    class="text-right">Delivered</div>
                             </div>
                         </div>
+                        }
                     </div>
                 </div>
 
             </div>
         </div>
 
-        <!-- Billing -->
+        @if(order.shipping_address){
         <div class="mt-16">
             <h2 class="sr-only">Billing Summary</h2>
 
@@ -85,6 +177,7 @@
                             <span class="block">{{order.shipping_address.address_2}}</span>
                             <span
                                 class="block">{{order.shipping_address.city}},{{order.shipping_address.province}}</span>
+                            <span class="block">{{order.shipping_address.phone}}</span>
                         </dd>
                     </div>
                     <div>
@@ -100,21 +193,27 @@
 
                 <dl class="mt-8 divide-y divide-gray-200 text-sm lg:col-span-5 lg:mt-0">
                     <div class="flex items-center justify-between py-4">
-                        <dt class="text-gray-600">Shipping</dt>
-                        <dd class="font-medium text-gray-900">₹90</dd>
+                        <dt class="text-gray-600">Inclusive of Tax</dt>
+                        <dd class="font-medium text-gray-900">₹{{((order.subtotal * 0.05) / (1 + 0.05) /
+                            100).toFixed(2)}}</dd>
                     </div>
                     <div class="flex items-center justify-between py-4">
-                        <dt class="text-gray-600">Tax</dt>
-                        <dd class="font-medium text-gray-900">₹{{(order.tax_total /
+                        <dt class="text-gray-600">Subtotal</dt>
+                        <dd class="font-medium text-gray-900">₹{{(order.subtotal /
                             100).toFixed(2)}}</dd>
+                    </div>
+                    <div class="flex items-center justify-between py-4">
+                        <dt class="text-gray-600">Shipping</dt>
+                        <dd class="font-medium text-gray-900">₹{{order.shipping_methods[0].data.shipping_cost}}</dd>
                     </div>
                     <div class="flex items-center justify-between pt-4">
                         <dt class="font-medium text-gray-900">Order total</dt>
-                        <dd class="font-medium text-green-800">₹{{(order.subtotal /
-                            100).toFixed(2)}}</dd>
+                        <dd class="font-medium text-green-800">₹{{totalPrice.toFixed(2)}}</dd>
                     </div>
                 </dl>
             </div>
         </div>
+        }
     </div>
+    }
 </div>

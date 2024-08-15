@@ -102,6 +102,7 @@ export class CheckoutComponent {
           this.shipping = 'Free';
           this.totalPrice = this.cart().subtotal / 100;
         } else {
+            this.couponCodeValid = false;
           if (this.address_zipcode !== '') {
             this.calculateShippingCost();
           } else {
@@ -162,11 +163,11 @@ export class CheckoutComponent {
       return;
     }
     if (!this.shippingCostCalculated) {
-      this.addressErrorMessage = 'Please select a shipping delivery option.';
+      this.addressErrorMessage = 'Please enter a valid zipcode.';
       this.paymentProcessing = false;
       return;
     }
-    this.razorPay.createOrder().subscribe({
+    this.razorPay.createOrder(this.totalPrice).subscribe({
       next: (data: any) => {
         this.medusa.addShippingMethod(this.cart().id, this.surfaceCost).then(({ cart }: { cart: any }) => {
           if (!this.user()) {
@@ -180,8 +181,13 @@ export class CheckoutComponent {
                   this.address_phone,
                 )
                 .then((data) => {
-                  this.paymentProcessing = false;
-                  this.router.navigate(['/order/' + data.id]);
+                    this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.guestEmail,"#"+data.id.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice as number / 100).toFixed(2),data.created_at).subscribe({
+                        next: (data: any) => {
+                            this.paymentProcessing = false;
+                            this.router.navigate(['/confirmOrder']);
+                        },
+                        error: (error) => {},
+                    });
                 })
                 .catch((error) => {
                   this.paymentProcessing = false;
@@ -197,8 +203,13 @@ export class CheckoutComponent {
                 this.address_phone,
               )
               .then((data) => {
-                  this.paymentProcessing = false;
-                  this.router.navigate(['/order/' + data.id]);
+                this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.guestEmail,"#"+data.id.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice as number / 100).toFixed(2),data.created_at).subscribe({
+                    next: (data: any) => {
+                        this.paymentProcessing = false;
+                        this.router.navigate(['/order/' + data.id]);
+                    },
+                    error: (error) => {},
+                });
               })
               .catch((error) => {
                 this.paymentProcessing = false;
@@ -212,6 +223,7 @@ export class CheckoutComponent {
       },
     });
   }
+
 
   selectAddress(address: any) {
     this.address_city = address.city;
@@ -259,7 +271,19 @@ export class CheckoutComponent {
         this.shipping = data[0].total_amount;
         this.shippingCostCalculated = true;
         this.totalPrice = this.totalPrice + data[0].total_amount;
-        this.disableButton = false;
+        this.medusa.updateCartAddress(this.cart().id, {
+            first_name: this.address_firstName,
+            last_name: this.address_lastName,
+            phone: this.address_phone,
+            company: this.address_company,
+            address_1: this.address_address1,
+            address_2   : this.address_address2,
+            city: this.address_city,
+            province: this.address_state,
+            postal_code: this.address_zipcode,
+        }).then(({cart}: {cart: any}) => {
+            this.disableButton = false;
+        })
       },
       error: (error) => {
         this.addressErrorMessage = 'Not deliverable to this address';

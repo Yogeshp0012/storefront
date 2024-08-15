@@ -15,4 +15,6 @@ export const routes: Routes = [
     { path: 'store/:type', loadComponent: () => import('./store/store.component').then(m => m.StoreComponent) },
     { path: 'product/:handle', loadComponent: () => import('./product-page/product-page.component').then(m => m.ProductPageComponent) },
     { path: 'order/:id', loadComponent: () => import('./order/order.component').then(m => m.OrderComponent) },
+    { path: 'confirmOrder', loadComponent: () => import('./guest-track/guest-track.component').then(m => m.GuestTrackComponent) },
+    { path: '**', redirectTo: '/' },
 ];

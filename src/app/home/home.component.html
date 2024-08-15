@@ -16,26 +16,29 @@
 </div>
 <div class="content-container">
     <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+
         <div class="flex w-full items-center justify-center">
             <h2 class="text-3xl font-semibold tracking-tight text-green-800">
                 New Arrivals
             </h2>
         </div>
-        <div class="px-10 mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 ">
-            @if(isLoading){
-            @for(i of [1,2,3,4]; track i){
-            <div class="group relative skeleton-loader  min-h-96 aspect-h-1 aspect-w-1 w-full lg:h-80 lg:aspect-none">
+        <div class="px-10 mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+            @if(isLoading) {
+            @for(i of [1,2,3,4]; track i) {
+            <div class="group relative skeleton-loader min-h-96 aspect-h-1 aspect-w-1 w-full lg:h-80 lg:aspect-none">
                 <div class="skeleton-image"></div>
                 <div class="skeleton-text"></div>
                 <div class="skeleton-price"></div>
             </div>
             }
-            }
-            @else{
-            @for(arrival of newArrivals; track arrival.id){
+            } @else {
+            @for(arrival of newArrivals; track arrival.id) {
             <div [routerLink]="['/product', arrival.handle]" class="group relative">
-                <img class="cursor-pointer min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 lg:aspect-none group-hover:opacity-90 lg:h-80 transition duration-300 ease-in-out transform group-hover:scale-105"
-                    [src]="arrival.thumbnail" alt="Product Image" />
+                <div
+                    class="overflow-hidden shadow-lg transition-transform duration-300 ease-in-out transform group-hover:scale-105">
+                    <img class="cursor-pointer w-full h-auto object-cover lg:h-80" [src]="arrival.thumbnail"
+                        alt="Product Image" />
+                </div>
                 <div class="mt-4 flex flex-col justify-between">
                     <div>
                         <span class="w-full cursor-pointer text-md font-semibold text-gray-900">
@@ -69,30 +72,33 @@
                 {{collection.title}}
             </h2>
         </div>
+
         <div class="px-10 mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            @if(isLoadingProducts){
-            @for(i of [1,2,3,4]; track i){
-            <div class="group relative skeleton-loader  min-h-96 aspect-h-1 aspect-w-1 w-full lg:h-80 lg:aspect-none">
+            @if(isLoadingProducts) {
+            @for(i of [1,2,3,4]; track i) {
+            <div class="group relative skeleton-loader min-h-96 aspect-h-1 aspect-w-1 w-full lg:h-80 lg:aspect-none">
                 <div class="skeleton-image"></div>
                 <div class="skeleton-text"></div>
                 <div class="skeleton-price"></div>
             </div>
             }
-            }
-            @else{
-            @for(product of productsByCollection[collection.id]; track product.id){
-            <div [routerLink]="['/product', product.handle]" class="group relative">
-                <img class="cursor-pointer min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80 transition duration-300 ease-in-out transform group-hover:scale-105"
-                    [src]="product.thumbnail" alt="Product Image" />
+            } @else {
+            @for(arrival of productsByCollection[collection.id]; track arrival.id) {
+            <div [routerLink]="['/product', arrival.handle]" class="group relative">
+                <div
+                    class="overflow-hidden shadow-lg transition-transform duration-300 ease-in-out transform group-hover:scale-105">
+                    <img class="cursor-pointer w-full h-auto object-cover lg:h-80" [src]="arrival.thumbnail"
+                        alt="Product Image" />
+                </div>
                 <div class="mt-4 flex flex-col justify-between">
                     <div>
-                        <span data-testid="product-title" class="cursor-pointer text-md font-semibold text-gray-900">
-                            {{product.name}}
+                        <span class="w-full cursor-pointer text-md font-semibold text-gray-900">
+                            {{arrival.name}}
                         </span>
                     </div>
                     <div>
-                        <span class="text-md text-green-800 cursor-pointer">
-                            ₹{{product.price}}
+                        <span class="cursor-pointer text-md text-green-800">
+                            ₹{{arrival.price}}
                         </span>
                     </div>
                 </div>

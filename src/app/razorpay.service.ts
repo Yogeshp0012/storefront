@@ -15,8 +15,8 @@ export class RazorpayService {
 
     private apiUrl = 'http://localhost:9000/store/createOrder';
 
-    createOrder() {
-        return this.http.post(`${environment.BACKEND_URL}/store/createOrder`, {});
+    createOrder(amount: Number) {
+        return this.http.post(`${environment.BACKEND_URL}/store/createOrder`, {amount: amount});
     }
 
     payNow(orderId: string, orderAmount: Number, customerName: string, customerEmail: string, customerPhone: string): Promise<any> {
@@ -58,7 +58,7 @@ export class RazorpayService {
           };
           const rzp = new window.Razorpay(options);
           rzp.on('payment.failed', function (response: any) {
-            reject(response.error); // Reject the promise with the error
+            console.log(response.error);
           });
           rzp.open();
         });

@@ -89,6 +89,7 @@ export class AccountComponent implements OnInit {
     constructor() {
         effect(() => {
             this.user = this.medusa.user;
+
             if (this.user()) {
                 this.lastName = this.user().last_name;
                 this.name = this.firstName + " " + this.lastName;
@@ -96,7 +97,7 @@ export class AccountComponent implements OnInit {
                 this.phone = this.user().phone;
                 this.addresses = this.user().shipping_addresses;
                 this.orders = this.medusa.user().orders;
-                console.log(this.orders);
+
             }
         })
     }

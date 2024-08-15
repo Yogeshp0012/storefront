@@ -286,54 +286,111 @@
                     <div class="max-w-xl">
                         <h1 class="text-2xl font-bold tracking-tight text-green-800">Order history</h1>
                     </div>
-
+                    @if(orders.length === 0){
+                    <div class="mt-6 text-green-800 text-sm">No orders found.</div>
+                    }
                     <div class="mt-6 flow-root sm:mt-8">
                         <div class="divide-y divide-gray-200">
                             @for(order of orders; track order.id){
                             <div class="flex flex-wrap items-center gap-y-4 py-6">
-                                <dl class="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
-                                    <dt class="text-base font-medium text-gray-800">Order ID</dt>
-                                    <dd class="mt-1.5 text-base font-semibold text-gray-900">
-                                        <span class="text-green-800 text-sm">{{order.id | slice:-8}}</span>
-                                    </dd>
-                                </dl>
+                                <div class="bg-white shadow-lg rounded-lg p-6 w-full">
+                                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Order Details</h2>
+                                    <dl class="space-y-4">
+                                        <div>
+                                            <dt class="text-base font-medium text-gray-600">Order ID</dt>
+                                            <dd class="mt-1.5 text-lg font-semibold text-gray-900">
+                                                <span class="text-green-800 text-sm">{{order.id | slice:-8}}</span>
+                                            </dd>
+                                        </div>
 
-                                <dl class="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
-                                    <dt class="text-base font-medium text-gray-800">Date</dt>
-                                    <dd class="mt-1.5 text-base font-semibold text-gray-900 dark:text-white"><time
-                                            class="font-semibold text-green-800">{{ order.created_at | date: 'dd' }}-{{
-                                            order.created_at | date: 'MM' }}-{{ order.created_at | date: 'yyyy'
-                                            }}</time>
-                                    </dd>
-                                </dl>
+                                        <div>
+                                            <dt class="text-base font-medium text-gray-600">Date</dt>
+                                            <dd class="mt-1.5 text-lg font-semibold text-gray-900 dark:text-white">
+                                                <time class="font-semibold text-green-800">{{ order.created_at | date:
+                                                    'dd' }}-{{ order.created_at | date: 'MM' }}-{{ order.created_at |
+                                                    date: 'yyyy' }}</time>
+                                            </dd>
+                                        </div>
 
-                                <dl class="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
-                                    <dt class="text-base font-medium text-gray-800">Products</dt>
-                                    <dd class="mt-1.5 text-base font-semibold text-gray-900">{{order.items.length}}</dd>
-                                </dl>
+                                        <div>
+                                            <dt class="text-base font-medium text-gray-600">Products</dt>
+                                            <dd class="mt-1.5 text-lg font-semibold text-gray-900">
+                                                {{order.items.length}}</dd>
+                                        </div>
 
-                                <dl class="w-1/2 sm:w-1/4 lg:w-auto lg:flex-1">
-                                    <dt class="text-base font-medium text-gray-800">Status</dt>
-                                    @if(order.status === "pending"){
-                                    <dd
-                                        class="me-2 mt-1.5 inline-flex items-center rounded bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                                        <svg class="me-1 h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M18.5 4h-13m13 16h-13M8 20v-3.333a2 2 0 0 1 .4-1.2L10 12.6a1 1 0 0 0 0-1.2L8.4 8.533a2 2 0 0 1-.4-1.2V4h8v3.333a2 2 0 0 1-.4 1.2L13.957 11.4a1 1 0 0 0 0 1.2l1.643 2.867a2 2 0 0 1 .4 1.2V20H8Z" />
-                                        </svg>
-                                        Processing
-                                    </dd>
-                                    }
-                                </dl>
+                                        <div>
+                                            <dt class="text-base font-medium text-gray-600">Status</dt>
+                                            @if (order.status === 'pending' && order.fulfillment_status === 'fulfilled')
+                                            {
+                                            <dd
+                                                class="mt-1.5 inline-flex items-center rounded bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">
+                                                <svg class="me-1 h-4 w-4" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2" d="M12 4v8l4 4" />
+                                                </svg>
+                                                Packed
+                                            </dd>
+                                            } @else if (order.status === 'pending' && order.fulfillment_status ===
+                                            'shipped') {
+                                            <dd
+                                                class="mt-1.5 inline-flex items-center rounded bg-orange-100 px-2.5 py-0.5 text-xs font-medium text-orange-800">
+                                                <svg class="me-1 h-4 w-4" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2" d="M12 4v8l4 4" />
+                                                </svg>
+                                                Shipped
+                                            </dd>
+                                            } @else if (order.status === 'pending') {
+                                            <dd
+                                                class="mt-1.5 inline-flex items-center rounded bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                                                <svg class="me-1 h-4 w-4" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2"
+                                                        d="M18.5 4h-13m13 16h-13M8 20v-3.333a2 2 0 0 1 .4-1.2L10 12.6a1 1 0 0 0 0-1.2L8.4 8.533a2 2 0 0 1-.4-1.2V4h8v3.333a2 2 0 0 1-.4 1.2L13.957 11.4a1 1 0 0 0 0 1.2l1.643 2.867a2 2 0 0 1 .4 1.2V20H8Z" />
+                                                </svg>
+                                                Processing
+                                            </dd>
+                                            } @else if (order.status === 'completed') {
+                                            <dd
+                                                class="mt-1.5 inline-flex items-center rounded bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                                                <svg class="me-1 h-4 w-4" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2" d="M5 12l5 5L20 7" />
+                                                </svg>
+                                                Delivered
+                                            </dd>
+                                            } @else if (order.status === 'canceled') {
+                                            <dd
+                                                class="mt-1.5 inline-flex items-center rounded bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">
+                                                <svg class="me-1 h-4 w-4" aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2"
+                                                        d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                                Canceled
+                                            </dd>
+                                            }
 
-                                <div
-                                    class="w-full grid sm:grid-cols-2 lg:flex lg:w-64 lg:items-center lg:justify-end gap-4">
-                                    <button type="button" [routerLink]="['/order', order.id]"
-                                        class="inline-flex justify-center text-sm rounded-sm bg-green-800 px-3 py-3 text-md font-semibold text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800">
-                                        View Invoice
-                                    </button>
+
+                                        </div>
+                                    </dl>
+
+                                    <div class="mt-6">
+                                        <button type="button" [routerLink]="['/order', order.id]"
+                                            class="inline-flex justify-center w-full text-sm rounded-md bg-green-800 px-4 py-2 text-md font-semibold text-white shadow-sm hover:bg-white hover:text-green-800 hover:ring-1 hover:ring-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-800">
+                                            View Invoice
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             }

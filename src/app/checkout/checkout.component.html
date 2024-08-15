@@ -34,7 +34,8 @@
                 @for(address of user().shipping_addresses; track address.id){
                 <div class="w-full mt-4">
                     <ul class="space-y-4 cursor-pointer">
-                        <li class="p-4 border shadow flex justify-between items-center">
+                        <li (click)="selectAddress(address)"
+                            class="p-4 border shadow flex justify-between items-center">
                             <div>
                                 <h3 class="font-normal text-sm">{{ address.first_name + " " + address.last_name
                                     }}</h3>
@@ -44,8 +45,7 @@
                                 <p class="font-normal text-sm text-green-800">{{ address.phone }}</p>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <button (click)="selectAddress(address)"
-                                    class="text-green-700 hover:text-green-800 focus:outline-none">
+                                <button class="text-green-700 hover:text-green-800 focus:outline-none">
                                     Select
                                 </button>
                             </div>
@@ -239,10 +239,6 @@
                     </ul>
                     <dl class="space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6">
                         <div class="flex items-center justify-between">
-                            <dt class="text-sm">Shipping</dt>
-                            <dd class="text-sm font-medium text-green-800">{{shipping}}</dd>
-                        </div>
-                        <div class="flex items-center justify-between">
                             <dt class="text-sm">Inclusive of Tax</dt>
                             <dd class="text-sm font-medium text-gray-900">₹{{(tax/100).toFixed(2)}}</dd>
                         </div>
@@ -267,6 +263,15 @@
                         @if(couponCodeValid){
                         <p class="text-green-800">{{couponCode}} Coupon applied.</p>
                         }
+                        <div class="flex items-center justify-between border-t border-gray-200 pt-6">
+                            <dt class="text-base font-medium">Subtotal</dt>
+                            <dd class="text-base font-medium text-gray-900">₹{{(cart().subtotal/100).toFixed(2)}}</dd>
+
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <dt class="text-sm">Shipping</dt>
+                            <dd class="text-sm font-medium text-green-800">{{shipping}}</dd>
+                        </div>
                         <div class="flex items-center justify-between border-t border-gray-200 pt-6">
                             <dt class="text-base font-medium">Total</dt>
                             <dd class="text-base font-medium text-gray-900">₹{{totalPrice.toFixed(2)}}</dd>

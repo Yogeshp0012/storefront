@@ -62,7 +62,7 @@ export class FaqComponent {
     ]
 
     toggleAccordion(index: number) {
-        console.log(this.accordionExpanded);
+
         this.accordionExpanded[index] = !this.accordionExpanded[index];
     }
 }
