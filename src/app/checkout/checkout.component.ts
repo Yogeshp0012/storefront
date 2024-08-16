@@ -181,7 +181,7 @@ export class CheckoutComponent {
                   this.address_phone,
                 )
                 .then((data) => {
-                    this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.guestEmail,"#"+data.id.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice as number / 100).toFixed(2),data.created_at).subscribe({
+                    this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.guestEmail,"#"+data.id.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice).toFixed(2),data.created_at).subscribe({
                         next: (data: any) => {
                             this.paymentProcessing = false;
                             this.router.navigate(['/confirmOrder']);
@@ -203,10 +203,11 @@ export class CheckoutComponent {
                 this.address_phone,
               )
               .then((data) => {
-                this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.guestEmail,"#"+data.id.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice as number / 100).toFixed(2),data.created_at).subscribe({
+                let orderId = data.id;
+                this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.user().email,"#"+data.id.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice).toFixed(2),data.created_at).subscribe({
                     next: (data: any) => {
                         this.paymentProcessing = false;
-                        this.router.navigate(['/order/' + data.id]);
+                        this.router.navigate(['/order/' + orderId]);
                     },
                     error: (error) => {},
                 });

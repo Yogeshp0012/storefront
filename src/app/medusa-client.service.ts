@@ -130,7 +130,7 @@ export class MedusaClientService {
     date: any,
   ) {
     return this.http.post(`${environment.BACKEND_URL}/store/orderEmail`, {
-      'items': items,
+      'items': [...items],
       'name': name,
       'address': address,
       'deliverymethod': 'Standard',
