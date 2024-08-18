@@ -2,6 +2,7 @@ import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { MedusaClientService } from '../medusa-client.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { TitleService } from '../title.service';
 
 @Component({
     selector: 'app-store',
@@ -20,8 +21,10 @@ export class StoreComponent implements OnInit, OnDestroy {
     isLoading: boolean = false;
     openFilterMenu: boolean = false;
     private subscription: Subscription = new Subscription();
+    private readonly title: TitleService = inject(TitleService);
 
     ngOnInit(): void {
+        this.title.setTitle("Vastragrah - All Products")
         this.isLoading = true;
         this.subscription.add(
             this.route.params.subscribe(params => {

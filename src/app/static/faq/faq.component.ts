@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { TitleService } from '../../title.service';
 
 @Component({
     selector: 'app-faq',
@@ -7,7 +8,9 @@ import { Component } from '@angular/core';
     templateUrl: './faq.component.html',
     styleUrl: './faq.component.scss'
 })
-export class FaqComponent {
+export class FaqComponent implements OnInit{
+    private readonly title: TitleService = inject(TitleService);
+
     accordionExpanded: boolean[] = [];
     questions = [{
         "id": 1,
@@ -61,8 +64,11 @@ export class FaqComponent {
 
     ]
 
-    toggleAccordion(index: number) {
+    ngOnInit(): void {
+        this.title.setTitle('Vastragrah - FAQ');
+    }
 
+    toggleAccordion(index: number) {
         this.accordionExpanded[index] = !this.accordionExpanded[index];
     }
 }

@@ -2,6 +2,7 @@ import { Component, effect, inject, OnInit } from '@angular/core';
 import { MedusaClientService } from '../medusa-client.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, DatePipe, SlicePipe } from '@angular/common';
+import { TitleService } from '../title.service';
 
 @Component({
   selector: 'app-order',
@@ -14,6 +15,7 @@ export class OrderComponent implements OnInit {
   private medusa: MedusaClientService = inject(MedusaClientService);
   private route: ActivatedRoute = inject(ActivatedRoute);
   private router: Router = inject(Router);
+  private readonly title: TitleService = inject(TitleService);
 
   orderId: string = '';
   order: any = {};
@@ -25,6 +27,7 @@ export class OrderComponent implements OnInit {
   delivery: string = '';
 
   ngOnInit(): void {
+    this.title.setTitle('Vastragrah - Order Tracking');
     this.medusa.checkUserLoggedIn().then(() => {
 
       if (!this.user()) {

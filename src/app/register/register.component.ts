@@ -32,7 +32,7 @@ export class RegisterComponent implements OnInit {
                 this.router.navigate(['/']);
             }
         });
-        this.title.setTitle('Register');
+        this.title.setTitle('Vastragrah - Register');
     }
 
     register(): void {

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RazorpayService } from '../razorpay.service';
 import { Router, RouterModule } from '@angular/router';
 import { Utils } from '../utils/Utils';
+import { TitleService } from '../title.service';
 
 @Component({
   selector: 'app-checkout',
@@ -16,6 +17,7 @@ export class CheckoutComponent {
   private readonly medusa: MedusaClientService = inject(MedusaClientService);
   private readonly razorPay: RazorpayService = inject(RazorpayService);
   private readonly router: Router = inject(Router);
+  private readonly title: TitleService = inject(TitleService);
 
   user = this.medusa.user;
   cart: any = this.medusa.cart;
@@ -89,6 +91,7 @@ export class CheckoutComponent {
   ];
 
   constructor() {
+    this.title.setTitle('Vastragrah - Checkout');
     effect(() => {
       this.user = this.medusa.user;
       this.cart = this.medusa.cart;
@@ -182,7 +185,7 @@ export class CheckoutComponent {
                 )
                 .then((data) => {
                     let orderId = data.id;
-                    this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.guestEmail,orderId,(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice).toFixed(2),data.created_at).subscribe({
+                    this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.guestEmail,orderId.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice).toFixed(2),data.created_at).subscribe({
                         next: (data: any) => {
                             this.paymentProcessing = false;
                             this.router.navigate(['/confirmOrder']);
@@ -205,7 +208,7 @@ export class CheckoutComponent {
               )
               .then((data) => {
                 let orderId = data.id;
-                this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.user().email,orderId,(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice).toFixed(2),data.created_at).subscribe({
+                this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.user().email,orderId.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice).toFixed(2),data.created_at).subscribe({
                     next: (data: any) => {
                         this.paymentProcessing = false;
                         this.router.navigate(['/order/' + orderId]);

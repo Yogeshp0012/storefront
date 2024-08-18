@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { TitleService } from '../title.service';
 
 @Component({
   selector: 'app-contact',
@@ -7,6 +8,11 @@ import { Component } from '@angular/core';
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.scss'
 })
-export class ContactComponent {
+export class ContactComponent implements OnInit {
+    private readonly title: TitleService = inject(TitleService);
+
+    ngOnInit(): void {
+        this.title.setTitle("Vastragrah - Contact")
+    }
 
 }

@@ -325,7 +325,7 @@ export class MedusaClientService {
 
   addShippingMethod(cartId: any, shippingCost: any) {
     return this.medusa.carts.addShippingMethod(cartId, {
-      option_id: 'so_01J55T375F9FGCCJKYZDS4PMYM',
+      option_id: 'so_01J5JKGJYQF8FJ3WXB5H1SJ1P8',
       data: {
         shipping_cost: shippingCost,
       },

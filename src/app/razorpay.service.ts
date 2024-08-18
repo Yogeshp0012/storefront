@@ -24,7 +24,7 @@ export class RazorpayService {
         let that = this;
         return new Promise((resolve, reject) => {
           const options = {
-            key: 'rzp_test_KEIgI2f7IkBcGx', // Replace with your Razorpay key_id
+            key: environment.RAZORPAY_KEY, // Replace with your Razorpay key_id
             amount: orderAmount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
             currency: 'INR',
             name: 'Vastragrah',

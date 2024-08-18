@@ -3,6 +3,7 @@ import { MedusaClientService } from '../medusa-client.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
+import { TitleService } from '../title.service';
 
 @Component({
   selector: 'app-product-page',
@@ -14,6 +15,7 @@ import { switchMap } from 'rxjs/operators';
 export class ProductPageComponent implements OnInit {
   private readonly medusa: MedusaClientService = inject(MedusaClientService);
   private route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly title: TitleService = inject(TitleService);
 
   product: any = null;
   productHandle: string = '';
@@ -27,6 +29,15 @@ export class ProductPageComponent implements OnInit {
   addingToCart: boolean = false;
   isProductLoading: boolean = false;
   tips: any[] = [];
+  isModalOpen: boolean = false;
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -39,6 +50,7 @@ export class ProductPageComponent implements OnInit {
     this.isProductLoading = true;
     this.isLoading = true;
 
+
     this.medusa.retrieveProduct(this.productHandle).then(async (product: any) => {
       if (product.products[0].metadata['styling-tips']) {
         let tipsArray = JSON.parse(product.products[0].metadata['styling-tips']);
@@ -49,6 +61,7 @@ export class ProductPageComponent implements OnInit {
         });
       }
       this.product = product.products[0];
+      this.title.setTitle("Vastragrah - " + this.product.title);
       this.variants = this.product.variants.reduce((acc: any, variant: any) => {
         const amount =
           variant.prices.find((price: any) => price.variant_id === variant.id)?.amount || null;

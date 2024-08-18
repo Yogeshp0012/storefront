@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { TitleService } from '../../title.service';
 
 @Component({
   selector: 'app-privacy-policy',
@@ -8,5 +9,9 @@ import { Component } from '@angular/core';
   styleUrl: './privacy-policy.component.scss'
 })
 export class PrivacyPolicyComponent {
+    private readonly title: TitleService = inject(TitleService);
 
+    ngOnInit(): void {
+        this.title.setTitle("Vastragrah - Privacy Policy")
+    }
 }

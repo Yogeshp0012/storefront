@@ -215,3 +215,54 @@ html {
     max-width: 400px;
     margin: 20px auto;
 }
+.product-container {
+    position: relative;
+  }
+
+  .product-image {
+    width: 100%;
+    cursor: pointer;
+  }
+
+  .modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+  }
+
+  .modal.hidden {
+    display: none;
+  }
+
+  .modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: auto; /* Enable scrolling */
+    background: white; /* Background for the modal content */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px; /* Padding around the image */
+  }
+
+  .zoomed-image {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+  }
+
+  .close-button {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background: none;
+    border: none;
+    color: red; /* Change to a contrasting color for visibility */
+    font-size: 24px;
+    cursor: pointer;
+  }

@@ -28,7 +28,7 @@ export class SignInComponent implements OnInit {
                 this.router.navigate(['/']);
             }
           });
-        this.title.setTitle('Sign In');
+        this.title.setTitle('Vastragrah - Sign In');
     }
 
     signIn(): void {

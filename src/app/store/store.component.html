@@ -58,7 +58,7 @@
 <div class="content">
     <div class="flex items-center justify-center bg-green-800 px-6 py-2.5 sm:px-3.5">
         <p class="text-sm leading-6 text-white">
-            Use <strong>'VASTRAGRAH'</strong> for free shipping above Rs 2000. Current delivery time is 4-7 days.
+            Use code <strong>'VASTRAGRAH'</strong> for free shipping above Rs 2000. Current delivery time is 4-7 days.
         </p>
     </div>
     <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -83,12 +83,17 @@
                     <div class="sm:block md:hidden absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
                         role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                         <div class="py-1" role="none">
-                            <p (click)="filterCollection('all');openFilterMenu = false;" routerLink="/store/all" routerLinkActive="text-green-800 font-semibold" href="#" class="font-medium text-gray-900 block px-4 py-2 text-sm" role="menuitem"
-                                tabindex="-1" id="menu-item-0">New arrivals</p>
-                                @for (collection of collections; track collection.id) {
-                                    <p (click)="filterCollection(collection.id); openFilterMenu = false;" [routerLink]="['/store', collection.handle]" routerLinkActive="text-green-800 font-semibold" href="#" class="font-medium text-gray-900 block px-4 py-2 text-sm" role="menuitem"
-                                    tabindex="-1" id="menu-item-0">{{collection.title}}</p>
-                                }
+                            <p (click)="filterCollection('all');openFilterMenu = false;" routerLink="/store/all"
+                                routerLinkActive="text-green-800 font-semibold" href="#"
+                                class="font-medium text-gray-900 block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
+                                id="menu-item-0">New arrivals</p>
+                            @for (collection of collections; track collection.id) {
+                            <p (click)="filterCollection(collection.id); openFilterMenu = false;"
+                                [routerLink]="['/store', collection.handle]"
+                                routerLinkActive="text-green-800 font-semibold" href="#"
+                                class="font-medium text-gray-900 block px-4 py-2 text-sm" role="menuitem" tabindex="-1"
+                                id="menu-item-0">{{collection.title}}</p>
+                            }
                         </div>
                     </div>
                     }
