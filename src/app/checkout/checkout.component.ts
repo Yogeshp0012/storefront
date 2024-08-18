@@ -170,7 +170,6 @@ export class CheckoutComponent {
       this.paymentProcessing = false;
       return;
     }
-    this.totalPrice = 1;
     this.razorPay.createOrder(this.totalPrice).subscribe({
       next: (data: any) => {
         this.medusa.addShippingMethod(this.cart().id, this.surfaceCost).then(({ cart }: { cart: any }) => {
