@@ -186,7 +186,7 @@ export class CheckoutComponent {
                 )
                 .then((data) => {
                     let orderId = data.id;
-                    this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.guestEmail,orderId.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice).toFixed(2),data.created_at).subscribe({
+                    this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.guestEmail,"#"+orderId.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice).toFixed(2),data.created_at).subscribe({
                         next: (data: any) => {
                             this.paymentProcessing = false;
                             this.router.navigate(['/confirmOrder']);
@@ -209,7 +209,7 @@ export class CheckoutComponent {
               )
               .then((data) => {
                 let orderId = data.id;
-                this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.user().email,orderId.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice).toFixed(2),data.created_at).subscribe({
+                this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.user().email,"#"+orderId.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice).toFixed(2),data.created_at).subscribe({
                     next: (data: any) => {
                         this.paymentProcessing = false;
                         this.router.navigate(['/order/' + orderId]);
