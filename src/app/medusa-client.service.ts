@@ -83,7 +83,7 @@ export class MedusaClientService {
   }
 
   logout() {
-    this.medusa.auth.deleteSession().then((data: any) => {
+    return this.medusa.auth.deleteSession().then((data: any) => {
       this.#user.set(null);
     });
   }

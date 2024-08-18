@@ -93,8 +93,10 @@ export class NavigationBarComponent implements OnInit {
     }
 
     logout() {
-        this.medusa.logout();
-        this.router.navigate(['/']);
+        let that = this;
+        this.medusa.logout().then(() => {
+            that.router.navigate(['/']);
+        });
     }
 
     onSearch() {
