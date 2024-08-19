@@ -33,31 +33,26 @@ export class FaqComponent implements OnInit{
     },
     {
         "id": 5,
-        "question": "Do you offer cash on delivery?",
-        "answer": "Yes, The shipping charges and Extra ₹50 cod charges should be paid before hand."
-    },
-    {
-        "id": 6,
         "question": "I was not available at home when the order arrived. What should be done?",
         "answer": "Please make sure you are available when you receive the order. In case you are not available, the package will be returned to us for re-shipping, charges will apply"
     },
     {
-        "id": 7,
+        "id": 6,
         "question": "What should I do if I get the wrong product or a defective product?",
         "answer": "Please reach out to us on Instagram or email us at support@vastragrah.co. Include your image and video of the product received. We will arrange the pickup with the right product."
     },
     {
-        "id": 8,
+        "id": 7,
         "question": "How do I take care of the garments?",
         "answer": "Please check the wash care guide."
     },
     {
-        "id": 9,
+        "id": 8,
         "question": "Can I get the delivery faster?",
         "answer": "Sorry, currently, we do not have a service to offer express delivery."
     },
     {
-        "id": 10,
+        "id": 9,
         "question": "I want to return the product. I didnt like it?",
         "answer": "Please be sure while placing the order. We will not accept the returns in this case."
     },
