@@ -272,6 +272,12 @@
                             <dt class="text-sm">Shipping</dt>
                             <dd class="text-sm font-medium text-green-800">{{shipping}}</dd>
                         </div>
+                      @if(welcomeApplied){
+                      <div class="flex items-center justify-between">
+                        <dt class="text-sm">Discount</dt>
+                        <dd class="text-sm font-medium text-green-800">{{discount.toFixed(2)}}</dd>
+                      </div>
+                      }
                         <div class="flex items-center justify-between border-t border-gray-200 pt-6">
                             <dt class="text-base font-medium">Total</dt>
                             <dd class="text-base font-medium text-gray-900">₹{{totalPrice.toFixed(2)}}</dd>

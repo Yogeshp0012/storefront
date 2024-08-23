@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, HostListener, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { MedusaClientService } from '../medusa-client.service';
 
 @Component({
@@ -27,6 +27,7 @@ export class NavigationBarComponent implements OnInit {
     tax: number = 0;
     cart: any = this.medusa.cart;
     isCartLoading: boolean = false;
+    currentRoute: string = '';
 
     @HostListener('window:scroll', [])
     onWindowScroll() {
@@ -34,6 +35,11 @@ export class NavigationBarComponent implements OnInit {
     }
 
     constructor(){
+      this.router.events.subscribe(event => {
+        if (event instanceof NavigationEnd) {
+          this.currentRoute = event.url;
+        }
+      });
         effect(() => {
             this.user = this.medusa.user;
             this.cart = this.medusa.cart;
@@ -41,6 +47,7 @@ export class NavigationBarComponent implements OnInit {
                 this.tax = (this.cart().subtotal * 0.05) / (1+0.05);
             }
         })
+
     }
 
     ngOnInit() {

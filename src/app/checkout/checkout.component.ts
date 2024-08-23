@@ -42,6 +42,8 @@ export class CheckoutComponent {
   surfaceCost: number = 0;
   expressCost: number = 0;
   couponCode: string = '';
+  discount: number = 0;
+  welcomeApplied: boolean = false;
 
   guestEmail: string = '';
   totalPrice: Number = 0;
@@ -99,20 +101,6 @@ export class CheckoutComponent {
         if (this.cart().subtotal === 0) {
           this.router.navigate(['/']);
         }
-        if (this.couponCodeValid && this.cart().subtotal > 200000) {
-          this.surfaceCost = 0;
-          this.couponCodeValid = true;
-          this.shipping = 'Free';
-          this.totalPrice = this.cart().subtotal / 100;
-        } else {
-            this.couponCodeValid = false;
-          if (this.address_zipcode !== '') {
-            this.calculateShippingCost();
-          } else {
-            this.shippingCostCalculated = false;
-            this.shipping = 'Calculated after entering address';
-          }
-        }
         this.tax = (this.cart().subtotal * 0.05) / (1 + 0.05);
         this.totalPrice = this.cart().subtotal / 100;
         this.pageLoading = false;
@@ -122,7 +110,13 @@ export class CheckoutComponent {
 
   applyCouponCode() {
     this.couponCodeInvalid = false;
-    if (this.couponCode === 'VASTRAGRAH' && this.cart().subtotal > 200000) {
+    if(this.couponCode === "WELCOME"){
+      this.discount = (this.cart().subtotal / 100) * 0.1;
+      this.couponCodeValid = true;
+      this.totalPrice = this.cart().subtotal / 100 - this.discount;
+      this.welcomeApplied = true;
+    }
+    else if (this.couponCode === 'VASTRAGRAH' && this.cart().subtotal > 200000) {
       this.surfaceCost = 0;
       this.couponCodeValid = true;
       this.shipping = 'Free';
