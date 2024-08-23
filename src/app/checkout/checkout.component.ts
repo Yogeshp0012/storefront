@@ -101,6 +101,20 @@ export class CheckoutComponent {
         if (this.cart().subtotal === 0) {
           this.router.navigate(['/']);
         }
+        if (this.couponCodeValid && this.cart().subtotal > 200000) {
+          this.surfaceCost = 0;
+          this.couponCodeValid = true;
+          this.shipping = 'Free';
+          this.totalPrice = this.cart().subtotal / 100;
+        } else {
+          this.couponCodeValid = false;
+          if (this.address_zipcode !== '') {
+            this.calculateShippingCost();
+          } else {
+            this.shippingCostCalculated = false;
+            this.shipping = 'Calculated after entering address';
+          }
+        }
         this.tax = (this.cart().subtotal * 0.05) / (1 + 0.05);
         this.totalPrice = this.cart().subtotal / 100;
         this.pageLoading = false;
