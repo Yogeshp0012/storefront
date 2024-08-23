@@ -129,6 +129,7 @@ export class CheckoutComponent {
       this.couponCodeValid = true;
       this.totalPrice = this.cart().subtotal / 100 - this.discount;
       this.welcomeApplied = true;
+      this.calculateShippingCost();
     }
     else if (this.couponCode === 'VASTRAGRAH' && this.cart().subtotal > 200000) {
       this.surfaceCost = 0;
@@ -269,8 +270,14 @@ export class CheckoutComponent {
     this.disableButton = true;
     this.shippingCostCalculated = false;
     this.addressErrorMessage = '';
-    this.totalPrice = this.cart().subtotal / 100;
-    if (this.couponCodeValid && this.cart().subtotal > 200000) {
+    if(this.welcomeApplied && this.couponCodeValid && this.couponCode === "WELCOME"){
+      this.totalPrice = this.cart().subtotal / 100 - this.discount;
+    }
+    else{
+      this.totalPrice = this.cart().subtotal / 100;
+    }
+
+    if (this.couponCodeValid && this.cart().subtotal > 200000 && this.couponCode === "VASTRAGRAH") {
       this.surfaceCost = 0;
       this.shipping = 'Free';
       this.totalPrice = this.cart().subtotal / 100;
