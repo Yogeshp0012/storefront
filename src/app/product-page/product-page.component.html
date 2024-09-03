@@ -118,7 +118,7 @@
                         <div class="h-px w-full border-b border-gray-200 mt-1">
                         </div>
                         <div class="flex flex-col font-semibold text-2xl mt-2">
-                            Rs. {{variants[selectedSize] !== undefined ? variants[selectedSize].amount : '799.00'}}
+                            <span class="flex"><span class="mr-2 text-gray-900 line-through">Rs. 799.00</span>Rs. {{variants[selectedSize] !== undefined ? variants[selectedSize].amount : '599.00'}}</span>
                         </div>
                         @if(addingToCart){
                         <button (click)="addToCart()"
@@ -234,7 +234,10 @@
                                 </span>
                             </div>
                             <div>
-                                <span class="cursor-pointer text-md text-green-800">
+                                <span class="line-through text-gray-900">
+                            ₹799.00
+                        </span>
+                                <span class="ml-2 cursor-pointer text-md text-green-800">
                                     ₹{{relatedProduct.price}}
                                 </span>
                             </div>

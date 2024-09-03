@@ -198,6 +198,8 @@ export class MedusaClientService {
               console.log(err);
             });
         }
+      }).catch((err: any) =>{
+        this.clearCart();
       });
     } else {
       this.createCart().then(({ cart }: { cart: any }) => {
@@ -325,7 +327,7 @@ export class MedusaClientService {
 
   addShippingMethod(cartId: any, shippingCost: any) {
     return this.medusa.carts.addShippingMethod(cartId, {
-      option_id: 'so_01J5JKGJYQF8FJ3WXB5H1SJ1P8',
+      option_id: "so_01J6WCXB14FWR3WYE8ACV9RSXP",
       data: {
         shipping_cost: shippingCost,
       },
