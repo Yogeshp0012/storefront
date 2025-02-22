@@ -6,7 +6,6 @@ import { TitleService } from '../title.service';
 
 @Component({
     selector: 'app-sign-in',
-    standalone: true,
     imports: [FormsModule, RouterModule],
     templateUrl: './sign-in.component.html',
     styleUrl: './sign-in.component.scss'

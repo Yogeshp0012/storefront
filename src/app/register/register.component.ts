@@ -7,7 +7,6 @@ import { Utils } from '../utils/Utils';
 
 @Component({
     selector: 'app-register',
-    standalone: true,
     imports: [FormsModule, RouterModule],
     templateUrl: './register.component.html',
     styleUrl: './register.component.scss'

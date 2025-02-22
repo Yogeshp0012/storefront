@@ -7,11 +7,10 @@ import { Utils } from '../utils/Utils';
 import { TitleService } from '../title.service';
 
 @Component({
-  selector: 'app-checkout',
-  standalone: true,
-  imports: [FormsModule, RouterModule],
-  templateUrl: './checkout.component.html',
-  styleUrl: './checkout.component.scss',
+    selector: 'app-checkout',
+    imports: [FormsModule, RouterModule],
+    templateUrl: './checkout.component.html',
+    styleUrl: './checkout.component.scss'
 })
 export class CheckoutComponent {
   private readonly medusa: MedusaClientService = inject(MedusaClientService);

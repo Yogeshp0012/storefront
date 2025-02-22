@@ -5,11 +5,10 @@ import { Utils } from '../utils/Utils';
 import { Router, RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-forgot-password',
-  standalone: true,
-  imports: [FormsModule, RouterModule],
-  templateUrl: './forgot-password.component.html',
-  styleUrl: './forgot-password.component.scss',
+    selector: 'app-forgot-password',
+    imports: [FormsModule, RouterModule],
+    templateUrl: './forgot-password.component.html',
+    styleUrl: './forgot-password.component.scss'
 })
 export class ForgotPasswordComponent {
   private readonly medusa: MedusaClientService = inject(MedusaClientService);

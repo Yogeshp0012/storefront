@@ -4,11 +4,10 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MedusaClientService } from '../medusa-client.service';
 
 @Component({
-  selector: 'app-guest-track',
-  standalone: true,
-  imports: [FormsModule, RouterModule],
-  templateUrl: './guest-track.component.html',
-  styleUrl: './guest-track.component.scss',
+    selector: 'app-guest-track',
+    imports: [FormsModule, RouterModule],
+    templateUrl: './guest-track.component.html',
+    styleUrl: './guest-track.component.scss'
 })
 export class GuestTrackComponent implements OnInit {
   orderId: string = '';

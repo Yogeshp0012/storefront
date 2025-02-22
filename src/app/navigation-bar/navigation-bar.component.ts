@@ -6,7 +6,6 @@ import { MedusaClientService } from '../medusa-client.service';
 
 @Component({
     selector: 'app-navigation-bar',
-    standalone: true,
     imports: [CommonModule, RouterModule, FormsModule],
     templateUrl: './navigation-bar.component.html',
     styleUrl: './navigation-bar.component.scss'

@@ -7,7 +7,6 @@ import { Utils } from '../utils/Utils';
 
 @Component({
     selector: 'app-account',
-    standalone: true,
     imports: [CommonModule, FormsModule, RouterModule, DatePipe],
     templateUrl: './account.component.html',
     styleUrl: './account.component.scss'

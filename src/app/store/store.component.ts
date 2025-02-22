@@ -6,7 +6,6 @@ import { TitleService } from '../title.service';
 
 @Component({
     selector: 'app-store',
-    standalone: true,
     imports: [RouterModule],
     templateUrl: './store.component.html',
     styleUrls: ['./store.component.scss'] // Corrected to 'styleUrls'

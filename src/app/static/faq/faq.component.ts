@@ -3,7 +3,6 @@ import { TitleService } from '../../title.service';
 
 @Component({
     selector: 'app-faq',
-    standalone: true,
     imports: [],
     templateUrl: './faq.component.html',
     styleUrl: './faq.component.scss'

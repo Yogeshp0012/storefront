@@ -5,11 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { Utils } from '../utils/Utils';
 
 @Component({
-  selector: 'app-footer',
-  standalone: true,
-  imports: [RouterModule, FormsModule],
-  templateUrl: './footer.component.html',
-  styleUrl: './footer.component.scss'
+    selector: 'app-footer',
+    imports: [RouterModule, FormsModule],
+    templateUrl: './footer.component.html',
+    styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
     private readonly medusa: MedusaClientService = inject(MedusaClientService);

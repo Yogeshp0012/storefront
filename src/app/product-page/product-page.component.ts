@@ -6,11 +6,10 @@ import { switchMap } from 'rxjs/operators';
 import { TitleService } from '../title.service';
 
 @Component({
-  selector: 'app-product-page',
-  standalone: true,
-  imports: [RouterModule, CommonModule],
-  templateUrl: './product-page.component.html',
-  styleUrls: ['./product-page.component.scss'], // Corrected from styleUrl to styleUrls
+    selector: 'app-product-page',
+    imports: [RouterModule, CommonModule],
+    templateUrl: './product-page.component.html',
+    styleUrls: ['./product-page.component.scss']
 })
 export class ProductPageComponent implements OnInit {
   private readonly medusa: MedusaClientService = inject(MedusaClientService);

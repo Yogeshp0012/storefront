@@ -5,11 +5,10 @@ import { CommonModule, DatePipe, SlicePipe } from '@angular/common';
 import { TitleService } from '../title.service';
 
 @Component({
-  selector: 'app-order',
-  standalone: true,
-  imports: [RouterModule, DatePipe, SlicePipe, CommonModule],
-  templateUrl: './order.component.html',
-  styleUrl: './order.component.scss',
+    selector: 'app-order',
+    imports: [RouterModule, DatePipe, SlicePipe, CommonModule],
+    templateUrl: './order.component.html',
+    styleUrl: './order.component.scss'
 })
 export class OrderComponent implements OnInit {
   private medusa: MedusaClientService = inject(MedusaClientService);

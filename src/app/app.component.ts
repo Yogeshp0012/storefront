@@ -8,7 +8,6 @@ import { TitleService } from './title.service';
 
 @Component({
     selector: 'app-root',
-    standalone: true,
     imports: [RouterOutlet, NavigationBarComponent, FooterComponent, RouterModule],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'

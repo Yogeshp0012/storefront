@@ -3,11 +3,10 @@ import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 import { TitleService } from '../../title.service';
 
 @Component({
-  selector: 'app-about',
-  standalone: true,
-  imports: [],
-  templateUrl: './about.component.html',
-  styleUrl: './about.component.scss'
+    selector: 'app-about',
+    imports: [],
+    templateUrl: './about.component.html',
+    styleUrl: './about.component.scss'
 })
 export class AboutComponent implements OnInit  {
     private readonly document = inject(DOCUMENT);
