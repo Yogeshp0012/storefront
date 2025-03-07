@@ -29,6 +29,8 @@ export class ProductPageComponent implements OnInit {
   isProductLoading: boolean = false;
   tips: any[] = [];
   isModalOpen: boolean = false;
+  openPopUp: boolean = false;
+  user = this.medusa.user;
 
   openModal() {
     this.isModalOpen = true;
@@ -108,6 +110,10 @@ export class ProductPageComponent implements OnInit {
     });
   }
 
+  addToFav(){
+    this.medusa.addToWishlist(this.user().email, this.productHandle);
+  }
+
   increment() {
     this.selectedQuantity += 1;
   }
@@ -119,14 +125,24 @@ export class ProductPageComponent implements OnInit {
   }
 
   addToCart() {
+    this.openPopUp = false;
     this.addingToCart = true;
-    if (
-      this.variants[this.selectedSize] !== undefined &&
-      this.selectedQuantity <= this.variants[this.selectedSize].inventory_quantity
-    ) {
-      this.medusa.addToCart(this.variants[this.selectedSize].id, this.selectedQuantity).then(() => {
-        this.addingToCart = false;
-      });
-    }
+    this.medusa.alreadyPresentInCart(this.variants[this.selectedSize].id).then((quantity) => {
+        if(quantity !== null && quantity >= this.variants[this.selectedSize].inventory_quantity) {
+            this.openPopUp = true;
+            this.addingToCart = false
+            return;
+        }
+        if (
+            this.variants[this.selectedSize] !== undefined &&
+            this.selectedQuantity <= this.variants[this.selectedSize].inventory_quantity
+          ) {
+            this.medusa.addToCart(this.variants[this.selectedSize].id, this.selectedQuantity).then(() => {
+              this.addingToCart = false;
+            });
+          }
+    }).catch((error) => {
+        console.error("Error:", error);
+    });
   }
 }

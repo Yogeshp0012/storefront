@@ -25,25 +25,28 @@ export class NavigationBarComponent implements OnInit {
     searchString: string = '';
     tax: number = 0;
     cart: any = this.medusa.cart;
+    favourite: any = this.medusa.favourite;
     isCartLoading: boolean = false;
     currentRoute: string = '';
+    wishListLength: any = '';
 
     @HostListener('window:scroll', [])
     onWindowScroll() {
         this.isScrolled = window.pageYOffset > 0;
     }
 
-    constructor(){
-      this.router.events.subscribe(event => {
-        if (event instanceof NavigationEnd) {
-          this.currentRoute = event.url;
-        }
-      });
+    constructor() {
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationEnd) {
+                this.currentRoute = event.url;
+            }
+        });
         effect(() => {
             this.user = this.medusa.user;
             this.cart = this.medusa.cart;
-            if(this.cart()){
-                this.tax = (this.cart().subtotal * 0.05) / (1+0.05);
+            this.favourite = this.medusa.favourite;
+            if (this.cart()) {
+                this.tax = (this.cart().subtotal * 0.05) / (1 + 0.05);
             }
         })
 
@@ -68,7 +71,7 @@ export class NavigationBarComponent implements OnInit {
                     product.minPrice = (minPrice / 100).toFixed(2);
                     return { id: product.id, handle: product.handle, thumbnail: product.thumbnail, name: product.title, price: product.minPrice };
                 });
-                this.filteredProducts = this.searchProducts
+            this.filteredProducts = this.searchProducts
         })
     }
 
@@ -77,11 +80,11 @@ export class NavigationBarComponent implements OnInit {
         this.isMenuOpen = true;
     }
 
-    openCart(){
+    openCart() {
         this.showCart = true;
     }
 
-    closeCart(){
+    closeCart() {
         this.showCart = false;
     }
 
@@ -93,7 +96,7 @@ export class NavigationBarComponent implements OnInit {
         if (!this.user()) {
             this.router.navigate(['/login']);
         }
-        else{
+        else {
             this.router.navigate(['/account']);
         }
     }
@@ -108,7 +111,11 @@ export class NavigationBarComponent implements OnInit {
     onSearch() {
         this.filteredProducts = this.searchProducts.filter(product =>
             product.name.toLowerCase().includes(this.searchString.toLowerCase())
-          );
+        );
+    }
+
+    goToWishList(){
+        this.router.navigate(['/wishlist']);
     }
 
     removeItem(id: string) {

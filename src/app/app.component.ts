@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
         this.title.setTitle("Vastragrah");
         this.medusa.checkUserLoggedIn().then(() => {
             this.medusa.checkCart();
+            this.medusa.getAllWishlistItems();
         });
         this.router.events.subscribe(event => {
             if (event instanceof NavigationEnd) {

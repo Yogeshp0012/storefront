@@ -45,7 +45,7 @@ export class CheckoutComponent {
   welcomeApplied: boolean = false;
 
   guestEmail: string = '';
-  totalPrice: Number = 0;
+  totalPrice: number = 0;
   pageLoading: boolean = true;
   couponCodeInvalid: boolean = false;
   couponCodeValid: boolean = false;
@@ -180,9 +180,10 @@ export class CheckoutComponent {
     }
     this.razorPay.createOrder(this.totalPrice).subscribe({
       next: (data: any) => {
+        console.log(data);
         this.medusa.addShippingMethod(this.cart().id, this.surfaceCost).then(({ cart }: { cart: any }) => {
           if (!this.user()) {
-            this.medusa.mergeCart(this.guestEmail, this.cart().id).then(() => {
+            this.medusa.mergeCart(this.cart().id, this.guestEmail).then(() => {
               this.razorPay
                 .payNow(
                   data.order.id,

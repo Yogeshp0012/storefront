@@ -1,0 +1,49 @@
+<div class="content-container">
+    <div class="bg-white">
+        <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+            <div class="flex justify-between">
+                <h2 class="text-2xl font-bold tracking-tight text-green-800">My Favourites </h2>
+                <button type="button" (click)="removeAllFavourites()"
+                    class="w-auto rounded-md border border-transparent bg-red-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-white hover:text-red-800 hover:ring-1 hover:ring-red-800 disabled:cursor-not-allowed">
+                    Remove All</button>
+            </div>
+            <div class="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                @if(isLoading) {
+                @for(i of [1,2,3,4]; track i) {
+                <div
+                    class="group relative skeleton-loader min-h-96 aspect-h-1 aspect-w-1 w-full lg:h-80 lg:aspect-none">
+                    <div class="skeleton-image"></div>
+                    <div class="skeleton-text"></div>
+                    <div class="skeleton-price"></div>
+                </div>
+                }
+                } @else {
+                @if(filteredProducts.length === 0){
+                <div class="mt-6 text-green-800 text-lg">You have no favourites</div>
+                }
+                @for(arrival of filteredProducts; track arrival.id) {
+                <div class="flex flex-col">
+                    <div [routerLink]="['/product', arrival.handle]" class="group relative">
+                        <div
+                            class="overflow-hidden shadow-lg transition-transform duration-300 ease-in-out transform group-hover:scale-105">
+                            <img class="cursor-pointer w-full h-auto object-cover lg:h-80" [src]="arrival.thumbnail"
+                                alt="Product Image" />
+                        </div>
+                        <div class="mt-4 flex flex-col justify-between">
+                            <div>
+                                <span class="w-full cursor-pointer text-md font-semibold text-gray-900">
+                                    {{arrival.title}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <span (click)="removeFromWishlist(arrival.handle)" class="cursor-pointer text-red-800">
+                        Remove
+                    </span>
+                </div>
+                }
+                }
+            </div>
+        </div>
+    </div>
+</div>
