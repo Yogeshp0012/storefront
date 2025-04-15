@@ -162,6 +162,13 @@
                     class="hidden md:block mt-6 text-lg cursor-pointer">
                     Orders
                 </div>
+                @if(isAnAffiliate){
+                <div (click)="selectedStep = '4'"
+                    [ngClass]="{'text-green-800 font-bold cursor-default': selectedStep === '4'}"
+                    class="hidden md:block mt-6 text-lg cursor-pointer">
+                    Affiliate Dashboard
+                </div>
+                }
             </div>
             <div class="md:col-span-2 font-semibold text-2xl">
                 <div class="sm:block md:hidden mb-4">
@@ -172,6 +179,9 @@
                             <option value="1">Profile</option>
                             <option value="2">Addresses</option>
                             <option value="3">Orders</option>
+                            @if(isAnAffiliate){
+                            <option value="4">Affiliate Dashboard</option>
+                            }
                         </select>
                         <div
                             class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -472,6 +482,27 @@
                 </div>
             </div>
             }
+            @if(selectedStep === '4'){
+                <div class="text-green-800">
+                    Thanks for joining our Affiliate Program!
+                </div>
+                <div class="mt-6" style="text-align:center">
+                    <apx-chart
+                      [series]="chartOptions.series"
+                      [chart]="chartOptions.chart"
+                      [xaxis]="chartOptions.xaxis"
+                      [title]="chartOptions.title"
+                    ></apx-chart>
+                  </div>
+                  <div class="mt-6" style="text-align:center">
+                    <apx-chart
+                      [series]="chartOptions.series"
+                      [chart]="chartOptions.chart"
+                      [xaxis]="chartOptions.xaxis"
+                      [title]="chartOptions.title"
+                    ></apx-chart>
+                  </div>
+                }
         </div>
     </div>
 </div>

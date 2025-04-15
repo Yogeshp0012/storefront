@@ -13,6 +13,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^19.1.7",
+    "@angular/cdk": "^19.2.9",
     "@angular/common": "^19.1.7",
     "@angular/compiler": "^19.1.7",
     "@angular/core": "^19.1.7",
@@ -22,6 +23,8 @@
     "@angular/router": "^19.1.7",
     "@medusajs/medusa-js": "^6.1.9",
     "@vercel/speed-insights": "^1.0.12",
+    "apexcharts": "^4.5.0",
+    "ng-apexcharts": "^1.15.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

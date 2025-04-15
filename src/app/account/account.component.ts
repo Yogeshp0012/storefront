@@ -1,19 +1,30 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { MedusaClientService } from '../medusa-client.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Utils } from '../utils/Utils';
+import {  NgApexchartsModule } from 'ng-apexcharts';
+
+export type ChartOptions = {
+    series: ApexAxisChartSeries;
+    chart: ApexChart;
+    xaxis: ApexXAxis;
+    title: ApexTitleSubtitle;
+  };
 
 @Component({
     selector: 'app-account',
-    imports: [CommonModule, FormsModule, RouterModule, DatePipe],
+    imports: [CommonModule, FormsModule, RouterModule, DatePipe, NgApexchartsModule],
     templateUrl: './account.component.html',
     styleUrl: './account.component.scss'
 })
 export class AccountComponent implements OnInit {
     private readonly router: Router = inject(Router);
     private readonly medusa: MedusaClientService = inject(MedusaClientService);
+
+    @ViewChild("chart") chart: any;
+    public chartOptions: any;
 
     user = this.medusa.user;
     name: string = '';
@@ -31,6 +42,7 @@ export class AccountComponent implements OnInit {
     editAddressId: string = '';
 
     addressIsLoading: boolean = false;
+    isAnAffiliate: boolean = false;
     address_city: string = '';
     address_country: string = 'IN';
     address_state: string = 'Karnataka';
@@ -86,6 +98,27 @@ export class AccountComponent implements OnInit {
     ];
 
     constructor() {
+        this.chartOptions = {
+            series: [
+              {
+                name: "My-series",
+                data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+              }
+            ],
+            chart: {
+              height: 350,
+              type: "bar"
+            },
+              fill: {
+                colors: ['#FF0000']
+              },
+            title: {
+              text: "Number of visits"
+            },
+            xaxis: {
+              categories: ["/dummyurl", "Feb",  "Mar",  "Apr",  "May",  "Jun",  "Jul",  "Aug", "Sep"]
+            }
+          };
         effect(() => {
             this.user = this.medusa.user;
 
@@ -106,6 +139,14 @@ export class AccountComponent implements OnInit {
             if (!this.user()) {
                 this.router.navigate(['/']);
             }
+            this.medusa.getAffiliate(this.user().email).subscribe({
+                next: (data: any) => {
+                    if (data.message.id) {
+                        this.isAnAffiliate = true;
+                    }
+                },
+                error: () => { }
+            })
             this.firstName = this.user().first_name;
             this.lastName = this.user().last_name;
             this.name = this.firstName + " " + this.lastName;
@@ -142,19 +183,19 @@ export class AccountComponent implements OnInit {
 
     updateAddress(): void {
         this.addressErrorMessage = '';
-        if(this.address_city === ''||
-        this.address_phone === ''||
-        this.address_state === ''||
-        this.address_zipcode === ''||
-        this.address_firstName === ''||
-        this.address_lastName === ''||
-        this.address_company === ''||
-        this.address_address1 === ''
-     ){
-        this.addressErrorMessage = 'Please enter all the details.';
-        return;
+        if (this.address_city === '' ||
+            this.address_phone === '' ||
+            this.address_state === '' ||
+            this.address_zipcode === '' ||
+            this.address_firstName === '' ||
+            this.address_lastName === '' ||
+            this.address_company === '' ||
+            this.address_address1 === ''
+        ) {
+            this.addressErrorMessage = 'Please enter all the details.';
+            return;
         }
-        if(this.address_phone.length < 10 || this.address_phone.length > 12){
+        if (this.address_phone.length < 10 || this.address_phone.length > 12) {
             this.addressErrorMessage = 'Please enter a valid phone number';
             return;
         }
@@ -212,7 +253,7 @@ export class AccountComponent implements OnInit {
     }
 
     addNewAddress(): void {
-        this.editAddressId ='';
+        this.editAddressId = '';
         this.address_city = '';
         this.address_phone = '';
         this.address_state = 'Karnataka';

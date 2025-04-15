@@ -1,13 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { MedusaClientService } from '../medusa-client.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { switchMap } from 'rxjs/operators';
 import { TitleService } from '../title.service';
+import { ClipboardModule, Clipboard  } from '@angular/cdk/clipboard';
 
 @Component({
     selector: 'app-product-page',
-    imports: [RouterModule, CommonModule],
+    imports: [RouterModule, CommonModule, ClipboardModule],
     templateUrl: './product-page.component.html',
     styleUrls: ['./product-page.component.scss']
 })
@@ -15,7 +16,10 @@ export class ProductPageComponent implements OnInit {
   private readonly medusa: MedusaClientService = inject(MedusaClientService);
   private route: ActivatedRoute = inject(ActivatedRoute);
   private readonly title: TitleService = inject(TitleService);
+  private readonly location: Location = inject(Location);
+  private readonly clipboard: Clipboard = inject(Clipboard);
 
+  clicked: boolean = false;
   product: any = null;
   productHandle: string = '';
   isLoading: boolean = false;
@@ -27,10 +31,13 @@ export class ProductPageComponent implements OnInit {
   variants: any;
   addingToCart: boolean = false;
   isProductLoading: boolean = false;
+  isAnAffiliate: boolean = false;
   tips: any[] = [];
   isModalOpen: boolean = false;
   openPopUp: boolean = false;
+  affiliatePopup: boolean = false;
   user = this.medusa.user;
+  affiliateId: string = '';
 
   openModal() {
     this.isModalOpen = true;
@@ -41,10 +48,35 @@ export class ProductPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.params.subscribe((params) => {
+    this.route.params.subscribe(params => {
       this.productHandle = params['handle'];
       this.loadProduct();
+
+      this.route.queryParams.subscribe(queryParams => {
+        const affiliateId = queryParams['affiliateId'];
+        if (affiliateId) {
+          this.medusa.updateVisits(affiliateId, this.productHandle).subscribe((data) => {
+            console.log(data);
+          });
+          localStorage.setItem("affiliateId", queryParams['affiliateId']);
+        }
+      });
     });
+  }
+
+
+  constructor(){
+     effect(() => {
+        console.log(this.user());
+        this.medusa.getAffiliate(this.user().email).subscribe({
+            next: (data: any) => {
+                if (data.message) {
+                    this.isAnAffiliate = true;
+                }
+            },
+            error: () => { }
+        })
+     });
   }
 
   private loadProduct() {
@@ -73,6 +105,7 @@ export class ProductPageComponent implements OnInit {
         };
         return acc;
       }, {});
+      console.log(this.variants);
       this.selectedImage = this.product.images[0].url;
       this.isProductLoading = false;
       this.isRelatedProductsLoading = true;
@@ -122,6 +155,33 @@ export class ProductPageComponent implements OnInit {
     if (this.selectedQuantity > 1) {
       this.selectedQuantity -= 1;
     }
+  }
+
+  generateAffiliateLink(){
+    this.medusa.getAffiliateLink(this.productHandle, this.user().email).subscribe((data) => {
+        this.affiliatePopup = true;
+        let url = this.getCurrentUrl();
+        this.affiliateId = this.getCurrentUrl() + "?affiliateId=" +data.message;
+    });
+  }
+
+  getCurrentUrl(): string {
+    const currentUrl = this.location.path(); // Get the path
+    const baseUrl = window.location.origin; // Get the base URL
+
+    // Create a new URL object
+    const url = new URL(currentUrl, baseUrl);
+
+    // Set the search parameters to an empty string to remove them
+    url.search = '';
+
+    return url.toString(); // Return the modified URL
+  }
+
+
+  copyToClipboard(){
+    this.clipboard.copy(this.affiliateId) ;
+    this.clicked = true;
   }
 
   addToCart() {

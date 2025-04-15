@@ -97,6 +97,25 @@ export class CheckoutComponent {
       this.user = this.medusa.user;
       this.cart = this.medusa.cart;
       if (this.cart()) {
+        const validateCartInventory = async () => {
+            const cartData = this.cart();
+            let cartUpdated = false;
+            for (const item of cartData.items) {
+                this.medusa.retrieveProduct(item.variant.product.handle).then(async (product: any) => {
+                    let maxQuantityAllowed = product.products[0].variants.reduce((acc: any, variant: any) => {
+                        if (variant.id === item.variant.id) {
+                            return variant.inventory_quantity;
+                        } else {
+                            return acc;
+                        }
+                    }, null);
+                    if(item.quantity > maxQuantityAllowed){
+                        this.medusa.updateCartItems(item.id, maxQuantityAllowed);
+                    }
+                });
+            }
+        }
+        validateCartInventory();
         if (this.cart().subtotal === 0) {
           this.router.navigate(['/']);
         }

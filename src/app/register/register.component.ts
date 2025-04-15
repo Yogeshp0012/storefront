@@ -23,6 +23,7 @@ export class RegisterComponent implements OnInit {
     password: string = '';
     errorMessage: string = '';
     isLoading: boolean = false;
+    affiliate: boolean = false;
     user = this.medusa.user;
 
     ngOnInit(): void {
@@ -51,6 +52,9 @@ export class RegisterComponent implements OnInit {
             this.errorMessage = "Please enter a valid phone number";
             this.isLoading = false;
             return;
+        }
+        if(this.affiliate){
+            this.medusa.addAffiliate(this.email);
         }
         this.medusa.createUser(this.firstName, this.lastName, this.email, this.password, this.phone)
             .then(() => {

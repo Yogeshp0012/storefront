@@ -2,7 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import Medusa, { Config } from '@medusajs/medusa-js';
 import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of, switchMap, throwError } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -25,6 +25,10 @@ export class MedusaClientService {
     constructor() {
         let config: Config = { baseUrl: environment.BACKEND_URL, maxRetries: 3 };
         this.medusa = new Medusa(config);
+    }
+
+    getVariantData(item: any) {
+        return this.medusa.variants.retrieve(item.variant_id);
     }
 
     getCollections() {
@@ -222,7 +226,6 @@ export class MedusaClientService {
     checkCart() {
         this.getCartId().subscribe({
             next: (data: any) => {
-                console.log(data);
                 let id = data;
                 if (id) {
                     this.retrieveCart(id).then(async ({ cart }: { cart: any }) => {
@@ -295,6 +298,21 @@ export class MedusaClientService {
         }
     }
 
+    getAffiliateLink(productId: string, email: string): Observable<any> {
+        return this.getAffiliate(email).pipe(
+            switchMap((data: any) => {
+                if (data.message) {
+                    return this.http.post(`${environment.BACKEND_URL}/store/create-affiliate-link`, {
+                        productHandle: productId,
+                        affiliateId: data.message.id
+                    });
+                } else {
+                    return throwError('No affiliate ID found');
+                }
+            })
+        );
+    }
+
     alreadyPresentInCart(variant_id: string): Promise<number | null> {
         return new Promise((resolve, reject) => {
             this.getCartId().subscribe({
@@ -312,6 +330,21 @@ export class MedusaClientService {
                 }
             });
         });
+    }
+
+    updateCartItems(lineId: string, quantity: number){
+        this.getCartId().subscribe({
+            next: (cartId: string) => {
+                this.medusa.carts.lineItems.update(cartId, lineId, {
+                    quantity: quantity
+                  })
+                  .then(({ cart }: {cart: any}) => {
+                    this.#cart.set(cart);
+                  })
+            },
+            error: (err: any) => {
+                console.log(err);
+            }})
     }
 
     addToCart(variant_id: string, quantity: number): Promise<void> {
@@ -461,6 +494,21 @@ addShippingMethod(cartId: any, shippingCost: any) {
             shipping_cost: shippingCost,
         },
     });
+}
+
+addAffiliate(email: string){
+    this.http.post(`${environment.BACKEND_URL}/store/add-affiliate`, { email: email }).subscribe({
+        next: (data: any) => {  },
+        error: (data: any) => { }
+    })
+}
+
+getAffiliate(email: string){
+    return this.http.post(`${environment.BACKEND_URL}/store/get-affiliate`, { email: email });
+}
+
+updateVisits(affiliateId: string,productHandle: string){
+    return this.http.post(`${environment.BACKEND_URL}/store/update-visits`, { affiliateId, productHandle });
 }
 
 getAllWishlistItems() {

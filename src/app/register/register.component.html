@@ -23,6 +23,15 @@
                     <input [(ngModel)]="password" name="password"
                         class="block w-full h-11 px-4 mt-2 border rounded-md appearance-none outline-none focus:outline-none focus:ring-2 focus:ring-green-800 border-ui-border-base hover:bg-ui-bg-field-hover"
                         label="password" type="password" placeholder="Enter Password" />
+                    <div class="relative flex items-start">
+                        <div class="flex h-6 ml-1 mt-2 items-center">
+                            <input [(ngModel)]="affiliate" id="affiliate" aria-describedby="affiliate-description" name="affiliate" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-600">
+                        </div>
+                        <div class="ml-3 mt-2 text-sm leading-6">
+                            <label for="affiliate" class="font-medium text-green-900">I want to participate in the affiliate program</label>
+                        </div>
+                    </div>
                     @if(errorMessage){
                     <div>
                         <span class="text-red-800 flex ">{{errorMessage}}</span>
