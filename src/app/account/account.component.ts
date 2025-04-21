@@ -26,6 +26,9 @@ export class AccountComponent implements OnInit {
     @ViewChild("chart") chart: any;
     public chartOptions: any;
 
+    @ViewChild("chart2") chart2: any;
+    public chartOptions2: any;
+
     user = this.medusa.user;
     name: string = '';
     firstName: string = '';
@@ -57,6 +60,20 @@ export class AccountComponent implements OnInit {
     addressErrorMessage: string = '';
 
     orders: any[] = [];
+
+    productHandlesAffiliate: any[] = [];
+    productVisitsAffiliate: any[] = [];
+    productPurchasesAffiliate: any[] = [];
+
+    totalPurchases: number = 0;
+    totalVisits: number = 0;
+    totalAmount: number = 0;
+
+    allOrderIds: string[] = [];
+    allAmounts: Number[] = [];
+    combinedData: any;
+
+    howItWorksPopup: boolean = false;
 
     stateList: string[] = [
         "Andaman and Nicobar Islands",
@@ -98,27 +115,7 @@ export class AccountComponent implements OnInit {
     ];
 
     constructor() {
-        this.chartOptions = {
-            series: [
-              {
-                name: "My-series",
-                data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
-              }
-            ],
-            chart: {
-              height: 350,
-              type: "bar"
-            },
-              fill: {
-                colors: ['#FF0000']
-              },
-            title: {
-              text: "Number of visits"
-            },
-            xaxis: {
-              categories: ["/dummyurl", "Feb",  "Mar",  "Apr",  "May",  "Jun",  "Jul",  "Aug", "Sep"]
-            }
-          };
+
         effect(() => {
             this.user = this.medusa.user;
 
@@ -129,7 +126,6 @@ export class AccountComponent implements OnInit {
                 this.phone = this.user().phone;
                 this.addresses = this.user().shipping_addresses;
                 this.orders = this.medusa.user().orders;
-
             }
         })
     }
@@ -143,6 +139,90 @@ export class AccountComponent implements OnInit {
                 next: (data: any) => {
                     if (data.message.id) {
                         this.isAnAffiliate = true;
+                        this.medusa.getCouponDetails(data.message.id).subscribe(async (data: any) => {
+                            for(let affiliateData of data.message){
+                                this.totalPurchases += affiliateData.purchases;
+                                this.totalVisits += affiliateData.visits;
+                                this.totalAmount += affiliateData.amount;
+                                this.productHandlesAffiliate.push(affiliateData.productHandle);
+                                this.productVisitsAffiliate.push(affiliateData.visits);
+                                this.productPurchasesAffiliate.push(affiliateData.purchases);
+                                this.allOrderIds.push(...affiliateData.orderIds);
+                                this.allAmounts.push(...affiliateData.amounts);
+                            }
+                            this.combinedData = await Promise.all(this.allOrderIds.map(async (orderId, index) => {
+                                let orderStatus = await this.medusa.retrieveOrder(orderId).then(({ order }: {order: any}) => {
+                                    if (order.status === 'pending' && order.fulfillment_status === 'fulfilled') {
+                                        return "Packed";
+                                    }
+                                    if (order.status === 'pending' && order.fulfillment_status === 'shipped') {
+                                        return "Shipped";
+                                    }
+                                    if (order.status === 'pending') {
+                                        return "Processing";
+                                    }
+                                    if (order.status === 'completed') {
+                                        return "Delivered";
+                                    }
+                                    if (order.status === 'canceled') {
+                                        return "Cancelled";
+                                    }
+                                    return ""; // Default case if none match
+                                });
+
+                                return {
+                                    orderId: "#" + orderId.slice(-8),
+                                    amount: this.allAmounts[index],
+                                    commission: (this.allAmounts[index] as number * 0.15),
+                                    status: orderStatus
+                                };
+                            }));
+
+
+                            this.chartOptions = {
+                                series: [
+                                  {
+                                    name: "Visits",
+                                    data: this.productVisitsAffiliate
+                                  }
+                                ],
+                                chart: {
+                                  height: 350,
+                                  type: "bar"
+                                },
+                                fill: {
+                                    colors: ["#14532D"]
+                                },
+                                title: {
+                                  text: "Number of Visits"
+                                },
+                                xaxis: {
+                                  categories: this.productHandlesAffiliate
+                                }
+                              };
+
+                              this.chartOptions2 = {
+                                series: [
+                                  {
+                                    name: "Purchases",
+                                    data: this.productPurchasesAffiliate
+                                  }
+                                ],
+                                chart: {
+                                  height: 350,
+                                  type: "bar"
+                                },
+                                fill: {
+                                    colors: ["#14532D"]
+                                },
+                                title: {
+                                  text: "Number of Purchases"
+                                },
+                                xaxis: {
+                                  categories: this.productHandlesAffiliate
+                                }
+                              };
+                        });
                     }
                 },
                 error: () => { }

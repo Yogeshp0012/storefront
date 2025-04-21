@@ -13,6 +13,7 @@ export class WishlistComponent implements OnInit {
     private medusa: MedusaClientService = inject(MedusaClientService);
     private readonly title: TitleService = inject(TitleService);
     private router: Router = inject(Router);
+    user = this.medusa.user;
 
     favourite: any = this.medusa.favourite;
     favouriteItems: any = [];
@@ -22,6 +23,10 @@ export class WishlistComponent implements OnInit {
     constructor() {
         effect(() => {
             this.isLoading = true;
+            this.user = this.medusa.user;
+            if(!this.user()){
+                this.router.navigate(['/']);
+            }
             this.favourite = this.medusa.favourite;
             this.favouriteItems = this.favourite();
             this.medusa.getAllProducts(25).then((data: any) => {

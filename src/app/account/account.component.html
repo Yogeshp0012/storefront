@@ -107,7 +107,7 @@
                                         Province</label>
                                     <div class="mt-2">
                                         <select [(ngModel)]="address_state" name="address_state" id="address_state"
-                                            class="block appearance-none w-full bg-white border border-green-800 text-green-800 py-2 px-2 rounded leading-tight focus:outline-none text-sm"
+                                            class="block appearance-none w-full bg-white border border-gray-300 text-gray-800 py-2 px-2 rounded leading-tight focus:outline-none text-sm"
                                             id="grid-state">
                                             @for(state of stateList; track state){
                                             <option [value]="state">{{ state }}</option>
@@ -193,7 +193,7 @@
                 </div>
                 @if(selectedStep === '1'){
                 <div>
-                    Hello, {{name}}
+                    <span class="text-green-800">Hello</span>, {{name}}
                     <div class="mt-3">
                         <label for="firstName" class="block text-sm font-medium leading-6 text-gray-900">First
                             Name</label>
@@ -288,7 +288,17 @@
                             Update
                         </button>
                         }
+                        <div class="max-w-md">
+                        <p class="mt-4  text-sm text-red-800">Delete Your Account</p>
+                        <p class="text-sm font-medium text-gray-800 mt-2">
+                            No longer want to use our service? You can delete your account by dropping a mail to   <a
+                            href="mailto:support@vastragrah.co"
+                            class="text-green-800 cursor-pointer font-semibold hover:underline"
+                        >
+                        support&#64;vastragrah.co
+                        </a>. All information related to this account will be deleted permanently.</p>
                     </div>
+                </div>
                 </div>
                 }
                 @if(selectedStep === '3'){
@@ -483,27 +493,151 @@
             </div>
             }
             @if(selectedStep === '4'){
+                <div class="flex justify-between">
                 <div class="text-green-800">
                     Thanks for joining our Affiliate Program!
                 </div>
+                <button (click)="howItWorksPopup = true;"
+                class="w-28 bg-white-800 outline-1 text-sm text-green-800 outline-offset-2 outline-green-800 cursor-pointer mt-1  w-full h-10 border-none  outline-none border-0 rounded-md">
+                How it Works ?
+            </button>
+        </div>
+                <dl class="mt-8 mb-8 grid grid-cols-3 gap-0.5 overflow-hidden rounded-2xl text-center">
+                    <div class="flex flex-col bg-green-800/5 p-8">
+                      <dt class="text-sm/6 font-semibold text-gray-800">Visits</dt>
+                      <dd class="order-first text-3xl font-semibold tracking-tight text-green-800">{{totalVisits}}</dd>
+                    </div>
+                    <div class="flex flex-col bg-green-800/5 p-8">
+                        <dt class="text-sm/6 font-semibold text-gray-800">Purchases</dt>
+                        <dd class="order-first text-3xl font-semibold tracking-tight text-green-800">{{totalPurchases}}</dd>
+                      </div>
+                      <div class="flex flex-col bg-green-800/5 p-8">
+                        <dt class="text-sm/6 font-semibold text-gray-800">Commission</dt>
+                        <dd class="order-first text-3xl font-semibold tracking-tight text-green-800">₹ {{totalAmount}}</dd>
+                      </div>
+                  </dl>
                 <div class="mt-6" style="text-align:center">
                     <apx-chart
                       [series]="chartOptions.series"
                       [chart]="chartOptions.chart"
                       [xaxis]="chartOptions.xaxis"
                       [title]="chartOptions.title"
+                      [fill]="chartOptions.fill"
                     ></apx-chart>
                   </div>
                   <div class="mt-6" style="text-align:center">
                     <apx-chart
-                      [series]="chartOptions.series"
-                      [chart]="chartOptions.chart"
-                      [xaxis]="chartOptions.xaxis"
-                      [title]="chartOptions.title"
+                      [series]="chartOptions2.series"
+                      [chart]="chartOptions2.chart"
+                      [xaxis]="chartOptions2.xaxis"
+                      [title]="chartOptions2.title"
+                      [fill]="chartOptions2.fill"
                     ></apx-chart>
                   </div>
+                  <div class="px-4 sm:px-6 lg:px-8 mt-4">
+                    <div class="sm:flex sm:items-center">
+                      <div class="sm:flex-auto">
+                        <h1 class="text-base font-semibold text-gray-900">Commission History</h1>
+                      </div>
+                    </div>
+                    <div class="mt-8 flow-root">
+                      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                          <div class="overflow-hidden ring-1 shadow-sm ring-black/5">
+                            <table class="min-w-full divide-y divide-gray-300 rounded-md">
+                              <thead class="bg-green-800/5">
+                                <tr>
+                                  <th scope="col" class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">OrderId</th>
+                                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Total Amount</th>
+                                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Commission</th>
+                                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Order Status</th>
+                                  <th scope="col" class="relative py-3.5 pr-4 pl-3 sm:pr-6">
+                                    <span class="sr-only">Edit</span>
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody class="divide-y divide-gray-200 bg-white">
+                                @for(data of combinedData; track data){
+                                    <tr>
+                                        <td class="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-green-800">{{data.orderId}}</td>
+                                        <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-800">₹ {{data.amount}}</td>
+                                        <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-800">₹ {{data.commission}}</td>
+                                        <td class="px-3 py-4 text-sm whitespace-nowrap text-green-800">{{data.status}}</td>
+                                      </tr>
+                                }
+
+
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 }
         </div>
     </div>
 </div>
+@if(howItWorksPopup){
+    <div class="relative z-10 " aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-gray-500/75 transition-opacity" aria-hidden="true"></div>
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+              <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="sm:flex sm:items-start">
+
+                  <div class="max-w-2xl mx-auto p-6 ">
+                    <h1 class="text-3xl font-bold text-center mb-6">How It Works</h1>
+                    <div class="space-y-4 h-[300px] overflow-y-scroll">
+                      <div class="flex items-start">
+                        <span class="text-lg font-semibold mr-2">1.</span>
+                        <div>
+                          <h2 class="text-lg text-green-800 font-semibold">Get Your Affiliate Link</h2>
+                          <p>Click on "Get Affiliate Link" for a specific product to generate a unique link that you can share with potential customers.</p>
+                        </div>
+                      </div>
+                      <div class="flex items-start">
+                        <span class="text-lg font-semibold mr-2">2.</span>
+                        <div>
+                          <h2 class="text-lg text-green-800 font-semibold">User Opens the Link</h2>
+                          <p>The user clicks on your affiliate link, which directs them to the product page. They can add the product to their cart along with any other items.</p>
+                        </div>
+                      </div>
+                      <div class="flex items-start">
+                        <span class="text-lg font-semibold mr-2">3.</span>
+                        <div>
+                          <h2 class="text-lg text-green-800 font-semibold">Discount at Checkout</h2>
+                          <p>During checkout, the user receives a <strong>10% discount</strong> on the total invoice amount, applicable to all products in their cart.</p>
+                        </div>
+                      </div>
+                      <div class="flex items-start">
+                        <span class="text-lg font-semibold mr-2">4.</span>
+                        <div>
+                          <h2 class="text-lg text-green-800 font-semibold">Earn Your Commission</h2>
+                          <p>As the affiliate, you earn a <strong>15% commission</strong> on the total order value. This commission is calculated based on the entire purchase amount, including any discounts applied.</p>
+                        </div>
+                      </div>
+                      <div class="flex items-start">
+                        <span class="text-lg font-semibold mr-2">5.</span>
+                        <div>
+                          <h2 class="text-lg text-green-800 font-semibold">Receive Your Payment</h2>
+                          <p>Your commission will be paid out <strong>3 days after the successful delivery</strong> of the order, ensuring that the order is complete ( and not cancelled or refunded ).
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                <button (click)="howItWorksPopup=false;" type="button" class="inline-flex w-full justify-center rounded-md bg-green-800 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-900 sm:ml-3 sm:w-auto">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+}
 </div>

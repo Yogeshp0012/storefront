@@ -2,7 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import Medusa, { Config } from '@medusajs/medusa-js';
 import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { catchError, firstValueFrom, map, Observable, of, switchMap, throwError } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -21,6 +21,9 @@ export class MedusaClientService {
 
     #favourite = signal<any>(null);
     favourite = computed(this.#favourite);
+
+    #cartLoading = signal<boolean>(false);
+    cartLoading = computed(this.#cartLoading);
 
     constructor() {
         let config: Config = { baseUrl: environment.BACKEND_URL, maxRetries: 3 };
@@ -89,8 +92,12 @@ export class MedusaClientService {
             .getSession()
             .then(({ customer }: { customer: any }) => {
                 this.#user.set(customer);
+                return true;
             })
-            .catch((err: any) => { });
+            .catch((err: any) => {
+                this.#user.set(null);
+                return false;
+            });
     }
 
     logout() {
@@ -128,6 +135,10 @@ export class MedusaClientService {
     //Send emails
     sendPasswordToken(email: string, code: string) {
         return this.http.post(`${environment.BACKEND_URL}/store/request-password`, { email, code });
+    }
+
+    getCouponDetails(affiliateId: string) {
+        return this.http.post(`${environment.BACKEND_URL}/store/get-coupon-details`, {affiliateId });
     }
 
     sendOrderEmail(
@@ -172,23 +183,29 @@ export class MedusaClientService {
         });
     }
 
-    getCartId(): Observable<string> {
+    private getLocalCartId(): Observable<string | null> {
+        this.currentCartId = localStorage.getItem('cart_id');
+        return of(this.currentCartId);
+    }
+
+    private handleCartIdResponse(message: string): string | null {
+        this.currentCartId = message === "Cart Search Failed" ? null : message;
+        return this.currentCartId;
+    }
+
+    private fetchCartIdByEmail(email: string): Observable<string | null> {
+        return this.http.post<{ message: string }>(`${environment.BACKEND_URL}/store/cart-details`, { email })
+            .pipe(
+                map(data => this.handleCartIdResponse(data.message)),
+                catchError(() => of(null))
+            );
+    }
+
+    getCartId(): Observable<string | null> {
         if (this.user() && this.user().email) {
-            return this.http.post(`${environment.BACKEND_URL}/store/cart-details`, { email: this.user().email }).pipe(
-                map((data: any) => {
-                    this.currentCartId = data.message;
-                    if (this.currentCartId === "Cart Search Failed") {
-                        this.currentCartId = null;
-                    }
-                    return this.currentCartId;
-                }),
-                catchError((error) => {
-                    return of(null); // Return null or handle the error as needed
-                })
-            ) as Observable<string>;
+            return this.fetchCartIdByEmail(this.user().email);
         } else {
-            this.currentCartId = localStorage.getItem('cart_id');
-            return of(this.currentCartId);
+            return this.getLocalCartId();
         }
     }
 
@@ -223,74 +240,79 @@ export class MedusaClientService {
             });
     }
 
-    checkCart() {
+    checkCart(): void {
+        this.#cartLoading.set(true);
         this.getCartId().subscribe({
-            next: (data: any) => {
-                let id = data;
-                if (id) {
-                    this.retrieveCart(id).then(async ({ cart }: { cart: any }) => {
-                        if (this.user() && this.user().email) {
-                            if (this.cart() && this.cart().items) {
-                                for (const item of this.cart().items) {
-                                    await this.medusa.carts.lineItems.create(cart.id, {
-                                        variant_id: item.variant_id,
-                                        quantity: item.quantity,
-                                    });
-                                }
-                            }
-                            this.mergeCart(cart.id, this.user().email)
-                                .then(({ cart }: { cart: any }) => {
-                                    this.#cart.set(cart);
-                                })
-                                .catch((err: any) => {
-                                    console.log(err);
-                                });
-                        }
-                        else {
-                            this.#cart.set(cart);
-                        }
-                    }).catch((err: any) => {
-                        this.clearCart();
-                    });
-                } else {
-                    this.createCart().then(async ({ cart }: { cart: any }) => {
-                        if (this.user() && this.user().email) {
-                            if (this.cart() && this.cart().items) {
-                                for (const item of this.cart().items) {
-                                    await this.medusa.carts.lineItems.create(cart.id, {
-                                        variant_id: item.variant_id,
-                                        quantity: item.quantity,
-                                    });
-                                }
-                            }
-                            this.http.post(`${environment.BACKEND_URL}/store/save-cart`, { email: this.user().email, cartId: cart.id }).subscribe({
-                                next: (data: any) => {
-                                    this.mergeCart(cart.id, this.user().email)
-                                        .then(({ cart }: { cart: any }) => {
-                                            this.#cart.set(cart);
-                                        })
-                                        .catch((err: any) => {
-                                            console.log(err);
-                                        });
-                                },
-                                error: (error) => {
-                                    console.log(error);
-                                },
-                            });
-                        }
-                        else {
-                            localStorage.setItem('cart_id', cart.id);
-                            this.#cart.set(cart);
-                        }
-                    });
+            next: async (cartId: string | null) => {
+                try {
+                    if (cartId) {
+                        const { cart } = await this.retrieveCart(cartId);
+                        await this.processExistingCart(cart);
+                    } else {
+                        const { cart } = await this.createCart();
+                        await this.processNewCart(cart);
+                    }
+                } catch (error) {
+                    console.error("Error in checkCart:", error);
+                    this.clearCart();
                 }
+                this.#cartLoading.set(false);
             },
             error: (error) => {
-                console.log(error);
-            }
-        })
-
+                this.#cartLoading.set(false);
+                console.error("Error fetching cart ID:", error);
+            },
+        });
     }
+
+    private async processExistingCart(cart: any): Promise<void> {
+        if (this.user() && this.user().email) {
+            await this.addItemsToCart(cart.id);
+            await this.mergeCartWithUser(cart.id, this.user().email);
+        } else {
+            this.#cart.set(cart);
+        }
+    }
+
+    private async processNewCart(cart: any): Promise<void> {
+        if (this.user() && this.user().email) {
+            await this.addItemsToCart(cart.id);
+            await this.saveCartToBackend(cart.id, this.user().email);
+            await this.mergeCartWithUser(cart.id, this.user().email);
+        } else {
+            localStorage.setItem('cart_id', cart.id);
+            this.#cart.set(cart);
+        }
+    }
+
+    private async addItemsToCart(cartId: string): Promise<void> {
+        if (this.cart() && this.cart().items) {
+            for (const item of this.cart().items) {
+                await this.medusa.carts.lineItems.create(cartId, {
+                    variant_id: item.variant_id,
+                    quantity: item.quantity,
+                });
+            }
+        }
+    }
+
+    private async mergeCartWithUser(cartId: string, email: string): Promise<void> {
+        try {
+            const { cart } = await this.mergeCart(cartId, email);
+            this.#cart.set(cart);
+        } catch (error) {
+            console.error("Error merging cart with user:", error);
+        }
+    }
+
+    private async saveCartToBackend(cartId: string, email: string): Promise<void> {
+        try {
+            await firstValueFrom(this.http.post(`${environment.BACKEND_URL}/store/save-cart`, { email, cartId }));
+        } catch (error) {
+            console.error("Error saving cart to backend:", error);
+        }
+    }
+
 
     getCurrentCartId() {
         if (this.currentCartId !== null || this.currentCartId !== '') {
@@ -316,7 +338,7 @@ export class MedusaClientService {
     alreadyPresentInCart(variant_id: string): Promise<number | null> {
         return new Promise((resolve, reject) => {
             this.getCartId().subscribe({
-                next: (cartId: string) => {
+                next: (cartId: any) => {
                     this.medusa.carts.retrieve(cartId).then((data: any) => {
                         const item = data.cart.items.find((item: any) => item.variant.id === variant_id);
                         const quantity = item ? item.quantity : null;
@@ -332,25 +354,26 @@ export class MedusaClientService {
         });
     }
 
-    updateCartItems(lineId: string, quantity: number){
+    updateCartItems(lineId: string, quantity: number) {
         this.getCartId().subscribe({
-            next: (cartId: string) => {
+            next: (cartId: any) => {
                 this.medusa.carts.lineItems.update(cartId, lineId, {
                     quantity: quantity
-                  })
-                  .then(({ cart }: {cart: any}) => {
-                    this.#cart.set(cart);
-                  })
+                })
+                    .then(({ cart }: { cart: any }) => {
+                        this.#cart.set(cart);
+                    })
             },
             error: (err: any) => {
                 console.log(err);
-            }})
+            }
+        })
     }
 
     addToCart(variant_id: string, quantity: number): Promise<void> {
         return new Promise((resolve, reject) => {
             this.getCartId().subscribe({
-                next: (cartId: string) => {
+                next: (cartId: any) => {
                     this.medusa.carts.lineItems
                         .create(cartId, { variant_id, quantity })
                         .then(({ cart }: { cart: any }) => {
@@ -373,7 +396,7 @@ export class MedusaClientService {
     removeFromCart(lineId: string): Promise<void> {
         return new Promise((resolve, reject) => {
             this.getCartId().subscribe({
-                next: (cartId: string) => {
+                next: (cartId: string | null) => {
                     this.medusa.carts.lineItems
                         .delete(cartId, lineId)
                         .then(({ cart }: { cart: any }) => {
@@ -397,38 +420,37 @@ export class MedusaClientService {
         return this.http.post(`${environment.BACKEND_URL}/store/subscribe`, { email });
     }
 
-    updateProfile(
+    async updateProfile(
         first_name: string,
         last_name: string,
         email: string,
         phone: string,
         password: string = '',
-    ) {
-        if (password == '') {
-            return this.medusa.customers
-                .update({ first_name, last_name, email, phone })
-                .then(({ customer }: { customer: any }) => {
-                    this.#user.set(customer);
-                });
-        } else {
-            return this.medusa.customers
-                .update({ first_name, last_name, email, password, phone })
-                .then(({ customer }: { customer: any }) => {
-                    this.#user.set(customer);
-                });
+    ): Promise<void> {
+        try {
+            const updateData: any = { first_name, last_name, email, phone };
+            if (password) {
+                updateData.password = password;
+            }
+
+            await this.medusa.customers.update(updateData);
+            this.checkUserLoggedIn();
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            throw new Error("Failed to update profile.");
         }
     }
 
-    addAddress(address: any) {
-        return this.medusa.customers.addresses
+
+    async addAddress(address: any) {
+        await this.medusa.customers.addresses
             .addAddress({
                 address: {
                     ...address,
                 },
-            })
-            .then(({ customer }: { customer: any }) => {
-                this.#user.set(customer);
             });
+            this.checkUserLoggedIn();
+
     }
 
     updateAddress(addressId: any, address: any) {
@@ -463,85 +485,113 @@ export class MedusaClientService {
 
     deleteCart() {
         this.#cart.set(null);
-        if (this.user()){
+        if (this.user()) {
             this.http.post(`${environment.BACKEND_URL}/store/delete-cart`, { email: this.user().email }).subscribe({
                 next: (data: any) => {
                     this.checkCart();
                 }, error: () => { }
             });
         }
-        else{
+        else {
             this.clearCart();
         }
     }
 
-retrieveOrder(orderId: string) {
-    return this.medusa.orders.retrieve(orderId);
-}
+    retrieveOrder(orderId: string) {
+        return this.medusa.orders.retrieve(orderId);
+    }
 
-calculateShippingCost(pincode: any, mode: string, grams: number) {
-    return this.http.post(`${environment.BACKEND_URL}/store/shipping`, { pincode, grams, mode });
-}
+    calculateShippingCost(pincode: any, mode: string, grams: number) {
+        return this.http.post(`${environment.BACKEND_URL}/store/shipping`, { pincode, grams, mode });
+    }
 
-lookupOrder(orderId: string) {
-    return this.medusa.orders.retrieve(orderId);
-}
+    lookupOrder(orderId: string) {
+        return this.medusa.orders.retrieve(orderId);
+    }
 
-addShippingMethod(cartId: any, shippingCost: any) {
-    return this.medusa.carts.addShippingMethod(cartId, {
-        option_id: "so_01J6WCXB14FWR3WYE8ACV9RSXP",
-        data: {
-            shipping_cost: shippingCost,
-        },
-    });
-}
+    addShippingMethod(cartId: any, shippingCost: any) {
+        return this.medusa.carts.addShippingMethod(cartId, {
+            option_id: "so_01J6WCXB14FWR3WYE8ACV9RSXP",
+            data: {
+                shipping_cost: shippingCost,
+            },
+        });
+    }
 
-addAffiliate(email: string){
-    this.http.post(`${environment.BACKEND_URL}/store/add-affiliate`, { email: email }).subscribe({
-        next: (data: any) => {  },
-        error: (data: any) => { }
-    })
-}
-
-getAffiliate(email: string){
-    return this.http.post(`${environment.BACKEND_URL}/store/get-affiliate`, { email: email });
-}
-
-updateVisits(affiliateId: string,productHandle: string){
-    return this.http.post(`${environment.BACKEND_URL}/store/update-visits`, { affiliateId, productHandle });
-}
-
-getAllWishlistItems() {
-    if (this.user()) {
-        this.http.post(`${environment.BACKEND_URL}/store/get-wishlist`, { email: this.user().email }).subscribe({
-            next: (data: any) => { this.#favourite.set(data.message) },
+    addAffiliate(email: string) {
+        this.http.post(`${environment.BACKEND_URL}/store/add-affiliate`, { email: email }).subscribe({
+            next: (data: any) => { },
             error: (data: any) => { }
         })
     }
-}
 
-addToWishlist(email: string, productId: string) {
-    this.http.post(`${environment.BACKEND_URL}/store/add-wishlist`, { email: email, productId: productId }).subscribe({
-        next: (data: any) => { this.#favourite.set(data.message) },
-        error: (_error: any) => { }
-    });
-}
+    getAffiliate(email: string) {
+        return this.http.post(`${environment.BACKEND_URL}/store/get-affiliate`, { email: email });
+    }
 
-removeFromWishlist(productId: string) {
-    if (this.user()) {
-        this.http.post(`${environment.BACKEND_URL}/store/delete-wishlist`, { email: this.user().email, productId: productId }).subscribe({
+    updateVisits(affiliateId: string, productHandle: string) {
+        return this.http.post(`${environment.BACKEND_URL}/store/update-visits`, { affiliateId, productHandle });
+    }
+
+    updatePurchases(affiliateId: string, productHandle: string, orderId: string, totalPrice: any) {
+        return this.http.post(`${environment.BACKEND_URL}/store/update-purchases`, { affiliateId, productHandle, orderId, totalPrice });
+    }
+
+    async getAllWishlistItems(): Promise<void> {
+        if (!this.user()) {
+            return;
+        }
+
+        try {
+            const response = await firstValueFrom(
+                this.http.post<{ message: string[] }>(`${environment.BACKEND_URL}/store/get-wishlist`, {
+                    email: this.user().email,
+                })
+            );
+            this.#favourite.set(response.message);
+        } catch (error) {
+            console.error("Error fetching wishlist items:", error);
+        }
+    }
+
+
+
+    addToWishlist(email: string, productId: string) {
+        this.http.post(`${environment.BACKEND_URL}/store/add-wishlist`, { email: email, productId: productId }).subscribe({
             next: (data: any) => { this.#favourite.set(data.message) },
             error: (_error: any) => { }
         });
     }
-}
 
-removeAllFavourites() {
-    if (this.user()) {
-        this.http.post(`${environment.BACKEND_URL}/store/wishlist-remove-all`, { email: this.user().email }).subscribe({
-            next: (data: any) => { this.#favourite.set(data.message) },
-            error: (_error: any) => { }
-        });
+    async removeFromWishlist(productId: string) {
+        if (!this.user()) {
+            return;
+        }
+
+        try {
+            const response = await firstValueFrom(
+                this.http.post<{ message: string[] }>(`${environment.BACKEND_URL}/store/delete-wishlist`, {
+                    email: this.user().email,productId: productId,
+                })
+            );
+            this.#favourite.set(response.message);
+        } catch (error) {
+            console.error("Error removing wishlist items:", error);
+        }
     }
-}
+
+    async removeAllFavourites() {
+        if (!this.user()) {
+            return;
+        }
+
+        try {
+            const response = await firstValueFrom(
+                this.http.post<{ message: string[] }>(`${environment.BACKEND_URL}/store/wishlist-remove-all`, { email: this.user().email })
+            );
+            this.#favourite.set(response.message);
+        } catch (error) {
+            console.error("Error removing wishlist items:", error);
+        }
+    }
 }

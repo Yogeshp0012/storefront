@@ -165,13 +165,10 @@ export class CheckoutComponent {
     }
   }
 
-  makePayment() {
-    this.paymentProcessing = true;
-    this.addressErrorMessage = '';
+  validateInputs() {
     if (!this.user() && !Utils.validateEmail(this.guestEmail)) {
       this.addressErrorMessage = 'Please enter a valid email address.';
-      this.paymentProcessing = false;
-      return;
+      return false;
     }
     if (
       this.address_city === '' ||
@@ -184,22 +181,30 @@ export class CheckoutComponent {
       this.address_address1 === ''
     ) {
       this.addressErrorMessage = 'Please enter all the details.';
-      this.paymentProcessing = false;
-      return;
+      return false;
     }
     if (this.address_phone.length < 10 || this.address_phone.length > 12) {
       this.addressErrorMessage = 'Please enter a valid phone number';
-      this.paymentProcessing = false;
-      return;
+      return false;
     }
     if (!this.shippingCostCalculated) {
       this.addressErrorMessage = 'Please enter a valid zipcode.';
+      return false;
+    }
+    return true;
+  }
+
+
+ makePayment() {
+    let items = this.cart().items;
+    this.paymentProcessing = true;
+    this.addressErrorMessage = '';
+    if (!this.validateInputs()) {
       this.paymentProcessing = false;
       return;
     }
     this.razorPay.createOrder(this.totalPrice).subscribe({
       next: (data: any) => {
-        console.log(data);
         this.medusa.addShippingMethod(this.cart().id, this.surfaceCost).then(({ cart }: { cart: any }) => {
           if (!this.user()) {
             this.medusa.mergeCart(this.cart().id, this.guestEmail).then(() => {
@@ -213,12 +218,24 @@ export class CheckoutComponent {
                 )
                 .then((data) => {
                     let orderId = data.id;
-                    this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.guestEmail,"#"+orderId.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice).toFixed(2),data.created_at).subscribe({
+                    const storedData = sessionStorage.getItem("affiliateData");
+                    if (storedData) {
+                        const data = JSON.parse(storedData);
+                        const affiliateId = data.affiliateId;
+                        const productHandle = data.productHandle;
+                        this.medusa.updatePurchases(affiliateId,productHandle,orderId, this.totalPrice).subscribe((data) => {
+                        })
+                    }
+
+                    this.medusa.sendOrderEmail(items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.guestEmail,"#"+orderId.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice).toFixed(2),data.created_at).subscribe({
                         next: (data: any) => {
-                            this.paymentProcessing = false;
                             this.router.navigate(['/confirmOrder']);
+                            this.paymentProcessing = false;
                         },
-                        error: (error) => {},
+                        error: (error) => {
+                            this.router.navigate(['/confirmOrder']);
+                            this.paymentProcessing = false;
+                        },
                     });
                 })
                 .catch((error) => {
@@ -236,12 +253,14 @@ export class CheckoutComponent {
               )
               .then((data) => {
                 let orderId = data.id;
-                this.medusa.sendOrderEmail(this.cart().items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.user().email,"#"+orderId.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice).toFixed(2),data.created_at).subscribe({
+                this.medusa.sendOrderEmail(items,this.address_firstName+" "+this.address_lastName,this.address_address1+" "+this.address_address2 + " " + this.address_city + " " + this.address_state + " " + this.address_zipcode,this.user().email,"#"+orderId.slice(-8),(this.tax/100).toFixed(2),this.surfaceCost,(this.totalPrice).toFixed(2),data.created_at).subscribe({
                     next: (data: any) => {
-                        this.paymentProcessing = false;
                         this.router.navigate(['/order/' + orderId]);
+                        this.paymentProcessing = false;
                     },
-                    error: (error) => {},
+                    error: (error) => {
+                        this.paymentProcessing = false;
+                    },
                 });
               })
               .catch((error) => {

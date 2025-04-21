@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MedusaClientService } from '../medusa-client.service';
 import { Utils } from '../utils/Utils';
 import { Router, RouterModule } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
     selector: 'app-forgot-password',
@@ -24,37 +25,33 @@ export class ForgotPasswordComponent {
   emailVerified: boolean = false;
   token: string = '';
 
-  checkEmail(): void {
+  async checkEmail(): Promise<void> {
     if (!Utils.validateEmail(this.email)) {
-      this.errorMessage = 'Invalid Email';
-      return;
+        this.errorMessage = 'Invalid Email';
+        return;
     }
+
     this.isLoading = true;
-    this.medusa.emailExists(this.email).then((data: any) => {
-      if (data.exists) {
-        this.errorMessage = '';
-        this.mailCode = Math.floor(100000 + Math.random() * 900000).toString();
-        this.medusa.sendPasswordToken(this.email, this.mailCode).subscribe({
-          next: (data: any) => {
-            this.token = data.code;
-            this.isLoading = false;
-            this.emailVerified = true;
-          },
-          error: (error) => {
-            console.log(error);
-            this.errorMessage = 'Failed to send email';
-            this.isLoading = false;
-          },
-        });
-      } else {
-        this.errorMessage = 'Email does not exist';
-        this.isLoading = false;
-      }
-    });
     this.errorMessage = '';
-    this.emailVerified = true;
-    this.isLoading = false;
-  }
+
+    try {
+        const data = await this.medusa.emailExists(this.email);
+
+        if (data.exists) {
+            this.mailCode = Math.floor(100000 + Math.random() * 900000).toString();
+            let tokenData: any = await firstValueFrom(this.medusa.sendPasswordToken(this.email, this.mailCode));
+            this.token = tokenData.code;
+            this.emailVerified = true;
+        } else {
+            this.errorMessage = 'Email does not exist';
+        }
+    } catch (error) {
+        console.error("Error checking email:", error);
+        this.errorMessage = 'Failed to send email';
+    } finally {
+        this.isLoading = false;
+    }
+}
 
   resetPassword() {
     this.errorMessage = '';

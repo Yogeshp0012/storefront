@@ -31,15 +31,16 @@
                         </div>
                         <div class="mt-4 flex flex-col justify-between">
                             <div>
-                                <span class="w-full cursor-pointer text-md font-semibold text-gray-900">
+                                <span class="w-full cursor-pointer text-md font-semibold text-gray-800">
                                     {{arrival.title}}
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <span (click)="removeFromWishlist(arrival.handle)" class="cursor-pointer text-red-800">
+                    <button (click)="removeFromWishlist(arrival.handle)"
+                        class="mt-2 bg-white-800 outline-1 text-green-800 outline-offset-2 outline-green-800 cursor-pointer mt-1  w-full h-10 border-none  outline-none border-0 rounded-md">
                         Remove
-                    </span>
+                    </button>
                 </div>
                 }
                 }

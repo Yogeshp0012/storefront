@@ -4,6 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { MedusaClientService } from '../medusa-client.service';
 
+interface Product {
+    id: string;
+    handle: string;
+    thumbnail: string;
+    name: string;
+    price: string;
+}
+
 @Component({
     selector: 'app-navigation-bar',
     imports: [CommonModule, RouterModule, FormsModule],
@@ -18,6 +26,7 @@ export class NavigationBarComponent implements OnInit {
     mobileMenu: boolean = false;
     isMenuOpen: boolean = false;
     user = this.medusa.user;
+    cartLoading = this.medusa.cartLoading;
     showCart: boolean = false;
     openSearch: boolean = false;
     searchProducts: any[] = [];
@@ -49,30 +58,31 @@ export class NavigationBarComponent implements OnInit {
                 this.tax = (this.cart().subtotal * 0.05) / (1 + 0.05);
             }
         })
-
     }
 
-    ngOnInit() {
-        this.medusa.getAllProducts(10).then(({ products, limit, offset, count }: { products: any, limit: any, offset: any, count: any }) => {
-            this.searchProducts =
-                products.map((product: any) => {
-                    let variants = product.variants;
-                    let minPrice: number = Infinity;
+    private mapProduct(product: any): Product {
+        const minPrice = Math.min(...product.variants.flatMap((v: any) => v.prices.map((price: any) => price.amount)));
+        return {
+            id: product.id,
+            handle: product.handle,
+            thumbnail: product.thumbnail,
+            name: product.title,
+            price: (minPrice / 100).toFixed(2)
+        };
+    }
 
-                    variants.forEach((v: any) => {
-                        if (v.prices) {
-                            v.prices.forEach((price: any) => {
-                                if (price.amount < minPrice) {
-                                    minPrice = price.amount;
-                                }
-                            });
-                        }
-                    });
-                    product.minPrice = (minPrice / 100).toFixed(2);
-                    return { id: product.id, handle: product.handle, thumbnail: product.thumbnail, name: product.title, price: product.minPrice };
-                });
-            this.filteredProducts = this.searchProducts
-        })
+    private async loadProducts() {
+        try {
+            const { products } = await this.medusa.getAllProducts(10);
+            this.searchProducts = products.map(this.mapProduct);
+            this.filteredProducts = [...this.searchProducts];
+        } catch (error) {
+            console.error("Error loading products:", error);
+        }
+    }
+
+    async ngOnInit() {
+        await this.loadProducts();
     }
 
     openMobileMenu() {
