@@ -39,7 +39,8 @@ export class HomeComponent implements OnInit {
                     }
                 });
                 product.minPrice = (minPrice / 100).toFixed(2);
-                return {id: product.id,handle: product.handle,thumbnail: product.thumbnail, name: product.title, price: product.minPrice};
+
+                return {id: product.id,handle: product.handle,thumbnail: product.thumbnail, name: product.title, price: product.minPrice, metadata: product.metadata};
             });
             this.isLoading = false;
           })
@@ -63,7 +64,7 @@ export class HomeComponent implements OnInit {
                     });
 
                     product.minPrice = (minPrice / 100).toFixed(2);
-                    return { id: product.id,handle: product.handle, thumbnail: product.thumbnail, name: product.title, price: product.minPrice };
+                    return { id: product.id,handle: product.handle, thumbnail: product.thumbnail, name: product.title, price: product.minPrice,  metadata: product.metadata };
                 });
             });
 

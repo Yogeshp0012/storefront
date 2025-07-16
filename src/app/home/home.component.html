@@ -46,10 +46,12 @@
                         </span>
                     </div>
                     <div>
-                        <span class="line-through text-gray-900">
+                        @if(arrival.metadata["old-price"] !== "false"){
+                        <span class="line-through text-gray-900 mr-2">
                             ₹799.00
                         </span>
-                        <span class="ml-2 cursor-pointer text-md text-green-800">
+                    }
+                        <span class="cursor-pointer text-md text-green-800">
                             ₹{{arrival.price}}
                         </span>
                     </div>
@@ -100,10 +102,12 @@
                         </span>
                     </div>
                     <div>
-                        <span class="line-through text-gray-900">
+                        @if(arrival.metadata["old-price"] !== "false"){
+                        <span class="line-through text-gray-900 mr-2">
                             ₹799.00
                         </span>
-                        <span class="ml-2 cursor-pointer text-md text-green-800">
+                    }
+                        <span class="cursor-pointer text-md text-green-800">
                             ₹{{arrival.price}}
                         </span>
                     </div>

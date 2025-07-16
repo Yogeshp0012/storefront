@@ -82,6 +82,7 @@ export class StoreComponent implements OnInit, OnDestroy {
                 handle: product.handle,
                 thumbnail: product.thumbnail,
                 name: product.title,
+                 metadata: product.metadata,
                 price: (minPrice / 100).toFixed(2)
             };
         });

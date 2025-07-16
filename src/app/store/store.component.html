@@ -139,18 +139,31 @@
                     }
                     } @else {
                     @for(product of products; track product.id) {
-                    <span [routerLink]="['/product', product.handle]" class="group text-sm cursor-pointer block">
-                        <div
-                            class="w-full h-[300px] overflow-hidden bg-gray-100 group-hover:opacity-75 flex items-center justify-center">
-                            <img [src]="product.thumbnail" alt="Product Image"
-                                class="h-full w-full object-cover object-center">
-                        </div>
-                        <h3 class="mt-4 font-semibold text-gray-900">{{product.name}}</h3>
-                        <span class="line-through text-gray-900">
-                            ₹799.00
-                        </span>
-                        <span class="ml-2 mt-2 font-normal text-md text-green-800">₹{{product.price}}</span>
-                    </span>
+<div
+  [routerLink]="['/product', product.handle]"
+  class="group text-sm cursor-pointer block p-8 md:p-2"
+>
+  <div
+    class="w-full sm:h-[400px] md:h-[300px] overflow-hidden bg-gray-100 group-hover:opacity-75 flex items-center justify-center"
+  >
+    <img
+      [src]="product.thumbnail"
+      alt="Product Image"
+      class="h-full w-full object-cover object-center"
+    />
+  </div>
+
+  <h3 class="mt-4 font-semibold text-gray-900">
+    {{ product.name }}
+  </h3>
+
+  @if (product.metadata["old-price"] !== "false") {
+    <span class="line-through text-gray-900 mr-2">₹799.00</span>
+  }
+
+  <span class="mt-2 font-normal text-md text-green-800">₹{{ product.price }}</span>
+</div>
+
                     }
                     }
                 </div>
