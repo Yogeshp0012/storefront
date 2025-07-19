@@ -141,6 +141,7 @@ export class ProductPageComponent implements OnInit {
                         thumbnail: product.thumbnail,
                         name: product.title,
                         price: product.minPrice,
+                        metadata: product.metadata,
                     };
                 })
                 .filter((product: any) => product.id !== this.product.id);

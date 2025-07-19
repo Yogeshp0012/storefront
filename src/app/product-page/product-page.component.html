@@ -120,8 +120,7 @@
                         </div>
                         <div class="flex flex-col font-semibold text-2xl mt-2">
 
-                                <span class="flex">@if(product.metadata["old-price"] !== "false"){<span class="mr-2 text-gray-900 line-through">Rs. {{variants[selectedSize] !== undefined ? variants[selectedSize].amount :
-                                    '599.00'}}</span>
+                                <span class="flex">@if(product.metadata["old-price"] !== "false"){<span class="mr-2 text-gray-900 line-through">₹{{product.metadata["previous-price"] || '799'}}</span>
                             }
                                 Rs.
                                 {{variants[selectedSize] !== undefined ? variants[selectedSize].amount :
@@ -272,7 +271,7 @@
                             </div>
                             <div>
                                 <span class="line-through text-gray-900">
-                                    ₹799.00
+                                    ₹{{relatedProduct.metadata["previous-price"] || '799'}}
                                 </span>
                                 <span class="ml-2 cursor-pointer text-md text-green-800">
                                     ₹{{relatedProduct.price}}

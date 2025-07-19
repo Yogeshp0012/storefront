@@ -158,7 +158,7 @@
   </h3>
 
   @if (product.metadata["old-price"] !== "false") {
-    <span class="line-through text-gray-900 mr-2">₹799.00</span>
+    <span class="line-through text-gray-900 mr-2">₹{{product.metadata["previous-price"] || '799'}}</span>
   }
 
   <span class="mt-2 font-normal text-md text-green-800">₹{{ product.price }}</span>
